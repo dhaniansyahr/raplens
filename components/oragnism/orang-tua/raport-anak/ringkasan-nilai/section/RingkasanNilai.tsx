@@ -3,7 +3,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -14,7 +13,7 @@ import Sikap from "../charts/Sikap";
 export default function RingkasanNilai() {
   return (
     <section className="flex flex-col gap-6 w-full">
-      <div className="flex flex-col gap-4 justify-center items-center w-full">
+      <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
         <h1 className="md:text-4xl text-2xl font-bold text-white">
           Nilai Akademis
         </h1>

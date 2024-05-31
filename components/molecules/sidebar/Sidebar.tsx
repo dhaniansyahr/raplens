@@ -59,7 +59,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   ? "bg-[#5DADE2] bg-opacity-10 rounded-md"
                   : "text-neutral-600"
               }`}
-              onClick={() => router.push("/dashboard/kursus")}
+              onClick={() => router.push("/orang-tua/dashboard")}
             >
               <MdOutlineDashboard size={24} className="flex-shrink-0" />
               {isOpen && (
@@ -79,7 +79,11 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
             </div>
 
             <div
-              className={`flex justify-between items-center cursor-pointer`}
+              className={`flex justify-between items-center cursor-pointer ${
+                pathname.includes("raport-anak")
+                  ? "bg-[#5DADE2] bg-opacity-10 rounded-md"
+                  : "text-neutral-600"
+              }`}
               onClick={() => setOpen(!open)}
             >
               <div
@@ -129,10 +133,20 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                 },
               }}
             >
-              <div className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2">
+              <div
+                className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                onClick={() =>
+                  router.push("/orang-tua/raport-anak/ringkasan-nilai")
+                }
+              >
                 <span className="text-xl font-normal">Ringkasan Nilai</span>
               </div>
-              <div className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2">
+              <div
+                onClick={() =>
+                  router.push("/orang-tua/raport-anak/detail-nilai")
+                }
+                className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+              >
                 <span className="text-xl font-normal">Detail Nilai</span>
               </div>
             </motion.div>
@@ -229,10 +243,20 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   },
                 }}
               >
-                <div className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2">
+                <div
+                  onClick={() =>
+                    router.push("/orang-tua/raport-anak/ringkasan-nilai")
+                  }
+                  className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                >
                   <span className="text-xl font-normal">Ringkasan Nilai</span>
                 </div>
-                <div className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2">
+                <div
+                  onClick={() =>
+                    router.push("/orang-tua/raport-anak/detail-nilai")
+                  }
+                  className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                >
                   <span className="text-xl font-normal">Detail Nilai</span>
                 </div>
               </motion.div>
