@@ -13,38 +13,24 @@ import {
 
 const data = [
   {
-    name: "Sepak Bola",
+    name: "Kehadiran",
+    kelas: 4,
+  },
+  {
+    name: "Keterlambatan",
     kelas: 5,
-    siswa: 10,
   },
   {
-    name: "Bulu Tangkis",
-    kelas: 7,
-    siswa: 8,
+    name: "Kepatuhan",
+    kelas: 5,
   },
   {
-    name: "Bola Voli",
-    kelas: 8,
-    siswa: 7,
-  },
-  {
-    name: "Atletik",
-    kelas: 9,
-    siswa: 6,
-  },
-  {
-    name: "Tenis Meja",
-    kelas: 10,
-    siswa: 5,
-  },
-  {
-    name: "Bola Basket",
-    kelas: 6,
-    siswa: 9,
+    name: "Kerapihan",
+    kelas: 5,
   },
 ];
 
-export default function Olahraga() {
+export default function Kedisiplinan() {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart
@@ -63,7 +49,6 @@ export default function Olahraga() {
         <YAxis />
         <Tooltip />
         <Bar dataKey="kelas" fill="#8884d8" />
-        <Bar dataKey="siswa" fill="#82ca9d" />
       </BarChart>
     </ResponsiveContainer>
   );

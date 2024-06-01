@@ -170,7 +170,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   ? "bg-[#5DADE2] bg-opacity-10 rounded-md"
                   : "text-neutral-600"
               }`}
-              onClick={() => router.push("/dashboard/kursus")}
+              onClick={() => router.push("/orang-tua/dashboard")}
             >
               <MdOutlineDashboard size={24} className="flex-shrink-0" />
               {isOpen && (
