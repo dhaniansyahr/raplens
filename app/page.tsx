@@ -1,4 +1,4 @@
-import LoginForm from "@/components/oragnism/login/LoginForm";
+import LoginForm from "@/components/organism/login/LoginForm";
 import Image from "next/image";
 
 export default function Home() {

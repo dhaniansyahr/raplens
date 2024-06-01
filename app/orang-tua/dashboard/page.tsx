@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import Top from "@/components/oragnism/orang-tua/Dashboard/section/Top";
+import Top from "@/components/organism/orang-tua/Dashboard/section/Top";
 import { useState } from "react";
 
 export default function Dashboard() {

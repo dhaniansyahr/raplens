@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import NilaiAkademisSection from "@/components/oragnism/orang-tua/Dashboard/section/NilaiAkademisSection";
+import NilaiAkademisSection from "@/components/organism/orang-tua/Dashboard/section/NilaiAkademisSection";
 import { useState } from "react";
 
 export default function Page() {

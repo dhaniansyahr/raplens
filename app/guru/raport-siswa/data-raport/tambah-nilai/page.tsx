@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import Kehadiran from "@/components/organism/orang-tua/raport-anak/detail-nilai/kehadiran/section/Kehadiran";
+import TambahNilai from "@/components/organism/guru/raport-anak/data-raport/section/TambahNilai";
 import { useState } from "react";
 
 export default function Page() {
@@ -13,7 +13,7 @@ export default function Page() {
       <div className="flex flex-row">
         <Sidebar isOpen={sideOpen} onClose={setSideOpen} />
         <div className="w-full h-full py-24 px-6 lg:p-24 lg:pt-[125px] max-h-screen overflow-y-scroll">
-          <Kehadiran />
+          <TambahNilai />
         </div>
       </div>
     </main>
