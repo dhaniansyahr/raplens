@@ -29,7 +29,7 @@ enum Role {
 }
 
 model Siswa {
-  id             Int      @id @default(autoincrement())
+  nis            Int      @id @default(autoincrement())
   nama           String
   nisn           String   @unique
   tempat_lahir   String
