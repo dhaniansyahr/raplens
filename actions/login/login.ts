@@ -1,3 +1,4 @@
+"use server";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/prismadb";
 import { User } from "@prisma/client";
@@ -8,8 +9,8 @@ function createToken(user: User) {
   });
 }
 
-const login = async (req: any, res: any) => {
-  const { email, password } = req.body;
+const login = async (data: any) => {
+  const { email, password } = data;
 
   try {
     const user: any = await prisma.user.findUnique({
@@ -19,18 +20,21 @@ const login = async (req: any, res: any) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return { status: 404, message: "User not found" };
     }
 
     const passwordIsValid = user.password === password;
+
     if (!passwordIsValid) {
-      return res.status(401).json({ message: "Invalid password" });
+      return { status: 401, message: "Invalid password" };
     }
 
     const token = createToken(user);
 
-    return res.status(200).json({ token });
+    return { status: 200, user, token };
   } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+    return { status: 500, message: error.message };
   }
 };
+
+export default login;

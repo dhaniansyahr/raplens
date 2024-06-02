@@ -1,12 +1,39 @@
 "use client";
+import login from "@/actions/login/login";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaKey } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 
 export default function LoginForm() {
   const router = useRouter();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleLogin = async () => {
+    setLoading(true);
+    const body = {
+      email,
+      password,
+    };
+    const response = await login(body);
+    if (response.status === 200) {
+      console.log(response);
+      setLoading(false);
+      if (response?.user?.role === "ORANG_TUA") {
+        router.push("/orang-tua/dashboard");
+      }
+    } else {
+      setLoading(false);
+      console.log(response.message);
+      alert(response.message);
+    }
+  };
+
   return (
     <section className="w-full h-full flex items-center justify-center">
       <div className="p-10 flex flex-col justify-between bg-white rounded-lg w-full h-full">
@@ -28,6 +55,8 @@ export default function LoginForm() {
               <input
                 type="text"
                 placeholder="Masukan Nama Anda"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="p-2 bg-transparent w-full border-none focus:outline-none"
               />
             </div>
@@ -39,6 +68,8 @@ export default function LoginForm() {
               <input
                 type="password"
                 placeholder="Masukan Password Anda"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="p-2 bg-transparent w-full border-none focus:outline-none"
               />
             </div>
@@ -50,9 +81,9 @@ export default function LoginForm() {
 
           <button
             className="w-full bg-[#5DADE2] text-white font-semibold text-base py-4 rounded-lg"
-            onClick={() => router.push("/orang-tua/dashboard")}
+            onClick={handleLogin}
           >
-            Masuk
+            {loading ? "Loading..." : "Masuk"}
           </button>
         </div>
       </div>
