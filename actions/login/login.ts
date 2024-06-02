@@ -4,7 +4,7 @@ import prisma from "@/lib/prismadb";
 import { User } from "@prisma/client";
 
 function createToken(user: User) {
-  return jwt.sign({ id: user.id }, process.env.JWT_SECRET ?? "", {
+  return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET ?? "", {
     expiresIn: 86400, // 24 hours
   });
 }
