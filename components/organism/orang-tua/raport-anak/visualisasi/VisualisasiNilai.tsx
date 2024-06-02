@@ -6,26 +6,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import RingkasanI from "../../../Dashboard/charts/RingkasanI";
-import Kehadiran from "../../../Dashboard/charts/Kehadiran";
-import Sikap from "../charts/Sikap";
+import { useRouter } from "next/navigation";
+import RingkasanI from "../../Dashboard/charts/RingkasanI";
+import Kehadiran from "../../Dashboard/charts/Kehadiran";
+import Sikap from "../ringkasan-nilai/charts/Sikap";
 
-export default function RingkasanNilai() {
+export default function VisualisasiNilai() {
+  const router = useRouter();
   return (
     <section className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
-        <h1 className="md:text-4xl text-2xl font-bold text-white">
+        {/* <h1 className="md:text-4xl text-2xl font-bold text-white">
           Nilai Akademis
-        </h1>
+        </h1> */}
         <Select>
           <SelectTrigger className="w-full max-w-[280px] h-[40px] rounded-full">
-            <SelectValue placeholder="Semester" />
+            <SelectValue placeholder="Nama Siswa" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="GANJIL_2023/2024">
-                Semester Ganjil 2023/2024
-              </SelectItem>
+              <SelectItem value="GANJIL_2023/2024">Rahmatul Idami</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -50,7 +50,12 @@ export default function RingkasanNilai() {
           <h3 className="text-lg font-normal">
             Rahmatul Idami mendapatkan nilai di atas rata-rata kelas.
           </h3>
-          <button className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center">
+          <button
+            className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center"
+            onClick={() =>
+              router.push("/guru/raport-siswa/visualisasi/akademik")
+            }
+          >
             <span className="text-2xl font-semibold">
               Detail Nilai Pelajaran Akademik
             </span>
@@ -74,7 +79,12 @@ export default function RingkasanNilai() {
           <h3 className="text-lg font-normal">
             Rahmatul Idami meraih nilai non - akademik diatas rata - rata kelas.
           </h3>
-          <button className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center">
+          <button
+            className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center"
+            onClick={() =>
+              router.push("/guru/raport-siswa/visualisasi/non-akademik")
+            }
+          >
             <span className="text-2xl font-semibold">
               Detail Nilai Pelajaran Non - Akademik
             </span>
@@ -123,7 +133,12 @@ export default function RingkasanNilai() {
             Terhitung 2 hari Rahmatul Idami Tidak ada kabar mengenai
             kehadirannya.
           </h3>
-          <button className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center">
+          <button
+            className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center"
+            onClick={() =>
+              router.push("/guru/raport-siswa/visualisasi/kehadiran")
+            }
+          >
             <span className="text-2xl font-semibold">Detail Kehadiran</span>
           </button>
         </div>
@@ -164,10 +179,41 @@ export default function RingkasanNilai() {
               tanggung jawab, serta kerjasama
             </li>
           </ol>
-          <button className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center">
+          <button
+            className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center"
+            onClick={() =>
+              router.push("/guru/raport-siswa/visualisasi/sikap-dan-perilaku")
+            }
+          >
             <span className="text-2xl font-semibold">
               Detail Nilai Sikap dan Perilaku
             </span>
+          </button>
+        </div>
+      </div>
+
+      <div className="w-full flex flex-col gap-4 md:grid md:grid-cols-2 bg-[#CFE3F0] p-10 shadow-lg">
+        <div className="w-full bg-white p-2 md:p-6 rounded-lg flex flex-col gap-4">
+          <h1 className="text-3xl font-bold">Akademik</h1>
+          <RingkasanI />
+        </div>
+        <div className="flex flex-col gap-4 w-full items-center justify-center">
+          <h1 className="text-2xl font-semibold">
+            Ingin tahu seberapa jauh nilai siswa berkembang?
+          </h1>
+          <h1 className="text-lg font-normal text-center">
+            Fitur ini memungkinkan Anda untuk melihat perbandingan nilai siswa/i
+            dari semester lalu secara detail. Anda dapat melihat nilai siswa/i
+            di setiap mata pelajaran, serta perbedaan nilai siswa/i dari
+            semester ke semester.
+          </h1>
+          <button
+            className="bg-white rounded-full outline-none border-none px-10 py-2 flex items-center justify-center"
+            onClick={() =>
+              router.push("/guru/raport-siswa/visualisasi/analisa-perkembangan")
+            }
+          >
+            <span className="text-2xl font-semibold">Analisa Perkembangan</span>
           </button>
         </div>
       </div>

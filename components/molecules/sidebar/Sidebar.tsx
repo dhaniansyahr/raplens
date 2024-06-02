@@ -170,7 +170,8 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   ? "bg-[#5DADE2] bg-opacity-10 rounded-md"
                   : "text-neutral-600"
               }`}
-              onClick={() => router.push("/orang-tua/dashboard")}
+              onClick={() => router.push("/guru/dashboard")}
+              // onClick={() => router.push("/orang-tua/dashboard")}
             >
               <MdOutlineDashboard size={24} className="flex-shrink-0" />
               {isOpen && (
@@ -208,7 +209,8 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                     }}
                     className="text-base leading-6 font-medium"
                   >
-                    Raport Anak
+                    {/* Raport Anak */}
+                    Raport Siswa
                   </motion.h1>
                 )}
               </div>
@@ -244,6 +246,18 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                 }}
               >
                 <div
+                  onClick={() => router.push("/guru/raport-siswa/data-raport")}
+                  className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                >
+                  <span className="text-xl font-normal">Data Raport</span>
+                </div>
+                <div
+                  onClick={() => router.push("/guru/raport-siswa/visualisasi")}
+                  className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                >
+                  <span className="text-xl font-normal">Visualisasi</span>
+                </div>
+                {/* <div
                   onClick={() =>
                     router.push("/orang-tua/raport-anak/ringkasan-nilai")
                   }
@@ -258,7 +272,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
                 >
                   <span className="text-xl font-normal">Detail Nilai</span>
-                </div>
+                </div> */}
               </motion.div>
             )}
           </div>
