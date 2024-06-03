@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { v4 as randomUUID } from "uuid";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +15,7 @@ async function seedsUser() {
     const hashPassword = await bcrypt.hash("orangtua1234", 12);
     await prisma.user.create({
       data: {
-        id: 1,
+        id: randomUUID(),
         email: "orangtua@gmail.com",
         password: hashPassword,
         role: "ORANG_TUA",
@@ -35,7 +36,7 @@ async function seedsUser() {
     const hashPassword = await bcrypt.hash("guru1234", 12);
     await prisma.user.create({
       data: {
-        id: 2,
+        id: randomUUID(),
         email: "guru@gmail.com",
         password: hashPassword,
         role: "GURU",
@@ -54,12 +55,12 @@ async function seedsSiswa() {
     await prisma.siswa.createMany({
       data: [
         {
-          id: 1,
+          id: randomUUID(),
           nama: "Siswa 1",
           nisn: "1234567890",
           nis: "1234",
           tempat_lahir: "Jakarta",
-          tanggal_lahir: new Date("2000-01-01"),
+          tanggal_lahir: "2000-01-01",
           alamat: "Jl. Jalan",
           agama: "Islam",
           nama_ayah: "Budi",
@@ -69,12 +70,12 @@ async function seedsSiswa() {
           jenis_kelamin: "Laki-laki",
         },
         {
-          id: 2,
+          id: randomUUID(),
           nama: "Siswa 2",
           nisn: "0987654321",
           nis: "4321",
           tempat_lahir: "Bandung",
-          tanggal_lahir: new Date("2000-01-02"),
+          tanggal_lahir: "2000-01-02",
           alamat: "Jl. Jalan",
           agama: "Islam",
           nama_ayah: "Ahmad",
@@ -84,12 +85,12 @@ async function seedsSiswa() {
           jenis_kelamin: "Perempuan",
         },
         {
-          id: 3,
+          id: randomUUID(),
           nama: "Siswa 3",
           nisn: "1122334455",
           nis: "5555",
           tempat_lahir: "Surabaya",
-          tanggal_lahir: new Date("2000-01-03"),
+          tanggal_lahir: "2000-01-03",
           alamat: "Jl. Jalan",
           agama: "Islam",
           nama_ayah: "Joko",
