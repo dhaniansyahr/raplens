@@ -1,11 +1,8 @@
 "use client";
-import { useRouter } from "next/navigation";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -13,19 +10,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,142 +18,149 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const data: Data[] = [
-  {
-    id: "m5gr84i9",
-    nama: "Ahmad",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Budi",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Caca",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Dedi",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Euis",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Fafa",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Gaga",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Haha",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Ii",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Jaja",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Kaka",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Lala",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Mama",
-    nisn: "1234567890",
-    nama_orang_tua: "Budi",
-  },
-];
+import axios from "axios";
+import { DialogAdd } from "../dialog/DialogAdd";
+import Akademik from "../charts/Akademik";
+import PersentaseKehadiran from "../charts/PersentaseKehadiran";
+import { DialogDetail } from "../dialog/DialogDetail";
+import { DialogEdit } from "../dialog/DialogEdit";
 
 export type Data = {
   id: string;
   nama: string;
   nisn: string;
-  nama_orang_tua: string;
+  nama_ayah: string;
 };
 
-export const columns: ColumnDef<Data>[] = [
-  {
-    accessorKey: "nama",
-    header: "NAMA",
-    cell: ({ row }: any) => (
-      <div className="capitalize">{row.getValue("nama")}</div>
-    ),
-  },
-  {
-    accessorKey: "nisn",
-    header: "NISN",
-    cell: ({ row }: any) => (
-      <div className="lowercase">{row.getValue("nisn")}</div>
-    ),
-  },
-  {
-    accessorKey: "nama_orang_tua",
-    header: "NAMA ORANG TUA",
-    cell: ({ row }: any) => (
-      <div className="capitalize">{row.getValue("nama_orang_tua")}</div>
-    ),
-  },
-  {
-    id: "actions",
-    header: "AKSI",
-    enableHiding: false,
-    cell: ({ row }: any) => {
-      return (
-        <div className="flex flex-row gap-4 w-full items-center justify-center">
-          <button className="bg-[#7AA4C0] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-            <span className="text-white font-medium text-base">Detail</span>
-          </button>
-          <button className="bg-[#C5C80D] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-            <span className="text-white font-medium text-base">Edit</span>
-          </button>
-          <button className="bg-[#FD2943] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-            <span className="text-white font-medium text-base">Hapus</span>
-          </button>
-        </div>
-      );
-    },
-  },
-];
-
 export default function TableSiswa() {
+  const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [token, setToken] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
   const tanggal = new Date().toLocaleDateString();
-  const router = useRouter();
+
+  const columns: ColumnDef<Data>[] = [
+    // {
+    //   accessorKey: "id",
+    //   header: "ID",
+    //   cell: ({ row }: any) => (
+    //     <div className="capitalize">{row.getValue("id")}</div>
+    //   ),
+    // },
+    {
+      accessorKey: "nama",
+      header: "NAMA",
+      cell: ({ row }: any) => (
+        <div className="capitalize">{row.getValue("nama")}</div>
+      ),
+    },
+    {
+      accessorKey: "nisn",
+      header: "NISN",
+      cell: ({ row }: any) => (
+        <div className="lowercase">{row.getValue("nisn")}</div>
+      ),
+    },
+    {
+      accessorKey: "nama_ayah",
+      header: "NAMA ORANG TUA",
+      cell: ({ row }: any) => (
+        <div className="capitalize">{row.getValue("nama_ayah")}</div>
+      ),
+    },
+    {
+      accessorKey: "id",
+      id: "actions",
+      header: "AKSI",
+      enableHiding: false,
+      cell: ({ row }: any) => {
+        // console.log("Row: ", row.original);
+        return (
+          <div className="flex flex-row gap-4 w-full items-center justify-center">
+            {/* <button className="bg-[#7AA4C0] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
+              <span className="text-white font-medium text-base">Detail</span>
+            </button> */}
+            <DialogDetail
+              token={token}
+              onClose={(v: boolean) => setOpen(!v)}
+              id={row.original.id}
+            />
+            <DialogEdit
+              token={token}
+              onClose={setOpen}
+              id={row.original.id}
+              isOpen={open}
+            />
+            {/* <button className="bg-[#C5C80D] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
+              <span className="text-white font-medium text-base">Edit</span>
+            </button> */}
+            <button
+              onClick={() => handleDelete(row.original.id)}
+              className="bg-[#FD2943] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80"
+            >
+              <span className="text-white font-medium text-base">Hapus</span>
+            </button>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const getData = async (token: string) => {
+    setLoading(true);
+    toast.loading("Loading...");
+    axios
+      .get("/api/siswa", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        setData(res.data?.siswa);
+        toast.dismiss();
+        toast.success("Data Siswa berhasil diambil!");
+
+        console.log("Data Siswa: ", res.data?.siswa);
+      })
+      .catch(() => {
+        setLoading(false);
+        toast.dismiss();
+        toast.error("Data Siswa gagal diambil!");
+      });
+  };
+
+  const handleDelete = (id: string) => {
+    setLoading(true);
+    toast.loading("Loading...");
+    axios
+      .delete(`/api/siswa?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        toast.dismiss();
+        toast.success("Data Siswa berhasil dihapus!");
+        getData(token);
+      })
+      .catch(() => {
+        setLoading(false);
+        toast.dismiss();
+        toast.error("Data Siswa gagal dihapus!");
+      });
+  };
+
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("raplens");
+    if (temp) {
+      const data = JSON.parse(temp);
+      setToken(data.token);
+      getData(data?.token);
+    }
+  }, [open]);
 
   const table = useReactTable({
     data,
@@ -181,7 +172,7 @@ export default function TableSiswa() {
   });
 
   return (
-    <section className="flex flex-col gap-6 w-full">
+    <section className="flex flex-col gap-20 w-full">
       <div className="flex flex-row gap-4">
         <div className="flex flex-col gap-4 w-full">
           <span className="text-xl font-normal text-black">Semester</span>
@@ -197,11 +188,7 @@ export default function TableSiswa() {
 
       <div className="flex flex-col gap-6">
         <h1 className="font-bold text-3xl text-white">Data Siswa</h1>
-        <button className="bg-[#BCF7FF] rounded-full px-6 py-3 outline-none border-none shadow max-w-[300px]">
-          <span className="text-[#0B378D] font-normal text-2xl">
-            Tambah Data Siswa
-          </span>
-        </button>
+        <DialogAdd token={token} onClose={setOpen} isOpen={open} />
       </div>
 
       <div className="flex flex-col gap-4 bg-white">
@@ -260,6 +247,62 @@ export default function TableSiswa() {
               )}
             </TableBody>
           </Table>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6 w-full items-center">
+        <h1 className="text-4xl font-normal text-center">
+          Grafik Penilaian Tiap Semester
+        </h1>
+
+        <div className="w-full flex flex-col gap-4">
+          <div className="w-full bg-white p-2 md:p-6 rounded-lg">
+            <Akademik />
+          </div>
+        </div>
+
+        <button className="bg-[#BCF7FF] rounded-full px-6 py-3 outline-none border-none shadow max-w-[300px]">
+          <span className="text-[#0B378D] font-normal text-2xl">
+            Lihat Daftar Raport
+          </span>
+        </button>
+      </div>
+
+      <div className="flex flex-col gap-6 w-full items-center">
+        <div className="w-full flex md:flex-row flex-col items-center justify-center gap-4 px-10 py-4 bg-[#3AADDF] rounded-xl">
+          <div className="w-full h-full p-2 md:p-6 rounded-lg flex flex-col gap-4">
+            <PersentaseKehadiran />
+          </div>
+          <div className="w-full p-2 flex flex-col gap-4">
+            <h1 className="text-5xl font-bold text-center">
+              Persentase Rata-rata Kehadiran siswa/i semester ini
+            </h1>
+            <p className="font-normal text-3xl">
+              Data diambil dari tanggal {tanggal} sampai dengan {tanggal}
+            </p>
+            <div className="flex flex-col gap-4">
+              <div className="grid grid-cols-2 gap-10">
+                <div className="flex flex-row gap-2">
+                  <span className="size-4 bg-[#0088FE] rounded-full"></span>
+                  <h1 className="text-sm font-normal">Hadir</h1>
+                </div>
+                <div className="flex flex-row gap-2">
+                  <span className="size-4 bg-[#ADD8E6] rounded-full"></span>
+                  <h1 className="text-sm font-normal">Sakit</h1>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-10">
+                <div className="flex flex-row gap-2">
+                  <span className="size-4 bg-[#00C49F] rounded-full"></span>
+                  <h1 className="text-sm font-normal">Izin</h1>
+                </div>
+                <div className="flex flex-row gap-2">
+                  <span className="size-4 bg-[#FFA07A] rounded-full"></span>
+                  <h1 className="text-sm font-normal">Alpa</h1>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

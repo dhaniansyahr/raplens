@@ -31,6 +31,8 @@ export default function LoginForm() {
       localStorage.setItem("raplens", data);
       if (response?.user?.role === "ORANG_TUA") {
         router.push("/orang-tua/dashboard");
+      } else {
+        router.push("/guru/dashboard");
       }
     } else {
       setLoading(false);

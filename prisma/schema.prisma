@@ -8,8 +8,8 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique
-  email     String
+  id        String   @id
+  email     String   @unique
   password  String
   role      Role     @default(ORANG_TUA)
   createdAt DateTime @default(now())
