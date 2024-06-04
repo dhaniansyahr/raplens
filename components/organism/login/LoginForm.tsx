@@ -21,15 +21,21 @@ export default function LoginForm() {
       password,
     };
     const response = await login(body);
-    if (response.status === 200) {
-      console.log(response);
+    if (response?.status === 200) {
       setLoading(false);
+
+      const data = JSON.stringify({
+        token: response?.token,
+        name: response?.user,
+      });
+      localStorage.setItem("raplens", data);
       if (response?.user?.role === "ORANG_TUA") {
         router.push("/orang-tua/dashboard");
+      } else {
+        router.push("/guru/dashboard");
       }
     } else {
       setLoading(false);
-      console.log(response.message);
       alert(response.message);
     }
   };

@@ -1,12 +1,18 @@
 "use server";
 import jwt from "jsonwebtoken";
-import prisma from "@/lib/prismadb";
-import { User } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import bcrypt from "bcrypt";
+
+const prisma = new PrismaClient();
 
 function createToken(user: User) {
-  return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET ?? "", {
-    expiresIn: 86400, // 24 hours
-  });
+  return jwt.sign(
+    { id: user.id, role: user.role, name: user.name },
+    process.env.JWT_SECRET ?? "",
+    {
+      expiresIn: 86400, // 24 hours
+    }
+  );
 }
 
 const login = async (data: any) => {
@@ -23,10 +29,10 @@ const login = async (data: any) => {
       return { status: 404, message: "User not found" };
     }
 
-    const passwordIsValid = user.password === password;
+    const passwordIsValid = await bcrypt.compare(password, user.password);
 
     if (!passwordIsValid) {
-      return { status: 401, message: "Invalid password" };
+      return { status: 401, message: "Invalid Password" };
     }
 
     const token = createToken(user);

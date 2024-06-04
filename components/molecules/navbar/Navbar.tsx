@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { IoIosNotificationsOutline, IoMdMenu } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
 
@@ -10,6 +11,17 @@ export default function Navbar({
   isOpen: boolean;
   setOpen: (value: boolean) => void;
 }) {
+  const [nama, setNama] = useState<string>("Nama Pengguna");
+
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("raplens");
+    if (temp) {
+      const data = JSON.parse(temp);
+      setNama(data.name?.name);
+    }
+  }, []);
+
   return (
     <nav className="fixed w-full top-0 flex justify-between bg-white shadow px-4 py-2 z-10">
       <div className="flex flex-row gap-6 items-center">
@@ -45,7 +57,7 @@ export default function Navbar({
             <AvatarFallback>R</AvatarFallback>
           </Avatar>
           <span className="hidden md:block font-bold text-base">
-            Nama Pengguna
+            {nama ?? "Nama Pengguna"}
           </span>
         </div>
       </div>
