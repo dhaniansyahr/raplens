@@ -1,11 +1,8 @@
 "use client";
-import { useRouter } from "next/navigation";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -13,19 +10,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,105 +18,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const data: Data[] = [
-  {
-    id: "m5gr84i9",
-    nama: "Ahmad",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Budi",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Caca",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Dedi",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Euis",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Fafa",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Gaga",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Haha",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Ii",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Jaja",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Kaka",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Lala",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Mama",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Nana",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Oa",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-  {
-    id: "m5gr84i9",
-    nama: "Papa",
-    nisn: "1234567890",
-    semester: "Genap TA/22",
-  },
-];
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export type Data = {
   id: string;
@@ -141,52 +28,127 @@ export type Data = {
   semester: string;
 };
 
-export const columns: ColumnDef<Data>[] = [
-  {
-    accessorKey: "nama",
-    header: "NAMA",
-    cell: ({ row }: any) => (
-      <div className="capitalize">{row.getValue("nama")}</div>
-    ),
-  },
-  {
-    accessorKey: "nisn",
-    header: "NISN",
-    cell: ({ row }: any) => (
-      <div className="lowercase">{row.getValue("nisn")}</div>
-    ),
-  },
-  {
-    accessorKey: "semester",
-    header: "SEMESTER",
-    cell: ({ row }: any) => (
-      <div className="capitalize">{row.getValue("semester")}</div>
-    ),
-  },
-  {
-    id: "actions",
-    header: "AKSI",
-    enableHiding: false,
-    cell: ({ row }: any) => {
-      return (
-        <div className="flex flex-row gap-4 w-full items-center justify-center">
-          <button className="bg-[#7AA4C0] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-            <span className="text-white font-medium text-base">Detail</span>
-          </button>
-          <button className="bg-[#C5C80D] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-            <span className="text-white font-medium text-base">Edit</span>
-          </button>
-          <button className="bg-[#FD2943] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-            <span className="text-white font-medium text-base">Hapus</span>
-          </button>
-        </div>
-      );
-    },
-  },
-];
-
 export default function TableDataRaport() {
   const router = useRouter();
+  const [data, setData] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [token, setToken] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+  const tanggal = new Date().toLocaleDateString();
+
+  const columns: ColumnDef<Data>[] = [
+    // {
+    //   accessorKey: "id",
+    //   header: "ID",
+    //   cell: ({ row }: any) => (
+    //     <div className="capitalize">{row.getValue("id")}</div>
+    //   ),
+    // },
+    {
+      accessorKey: "nama",
+      header: "NAMA",
+      cell: ({ row }: any) => (
+        <div className="capitalize">{row.getValue("nama")}</div>
+      ),
+    },
+    {
+      accessorKey: "nisn",
+      header: "NISN",
+      cell: ({ row }: any) => (
+        <div className="lowercase">{row.getValue("nisn")}</div>
+      ),
+    },
+    // {
+    //   accessorKey: "nama_ayah",
+    //   header: "NAMA ORANG TUA",
+    //   cell: ({ row }: any) => (
+    //     <div className="capitalize">{row.getValue("nama_ayah")}</div>
+    //   ),
+    // },
+    {
+      accessorKey: "id",
+      id: "actions",
+      header: "AKSI",
+      enableHiding: false,
+      cell: ({ row }: any) => {
+        // console.log("Row: ", row.original);
+        return (
+          <div className="flex flex-row gap-4 w-full items-center justify-center">
+            <button
+              onClick={() =>
+                router.push(`/guru/raport-siswa/data-raport/${row.original.id}`)
+              }
+              className="bg-[#7AA4C0] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80"
+            >
+              <span className="text-white font-medium text-base">Detail</span>
+            </button>
+            <button className="bg-[#C5C80D] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
+              <span className="text-white font-medium text-base">Edit</span>
+            </button>
+            <button className="bg-[#FD2943] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
+              <span className="text-white font-medium text-base">Hapus</span>
+            </button>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const getData = async (token: string) => {
+    setLoading(true);
+    toast.loading("Loading...");
+    axios
+      .get("/api/siswa", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        setData(res.data?.siswa);
+        toast.dismiss();
+        toast.success("Data Siswa berhasil diambil!");
+
+        console.log("Data Siswa: ", res.data?.siswa);
+      })
+      .catch(() => {
+        setLoading(false);
+        toast.dismiss();
+        toast.error("Data Siswa gagal diambil!");
+      });
+  };
+
+  const handleDelete = (id: string) => {
+    setLoading(true);
+    toast.loading("Loading...");
+    axios
+      .delete(`/api/siswa?id=${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setLoading(false);
+        toast.dismiss();
+        toast.success("Data Siswa berhasil dihapus!");
+        getData(token);
+      })
+      .catch(() => {
+        setLoading(false);
+        toast.dismiss();
+        toast.error("Data Siswa gagal dihapus!");
+      });
+  };
+
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("raplens");
+    if (temp) {
+      const data = JSON.parse(temp);
+      setToken(data.token);
+      getData(data?.token);
+    }
+  }, [open]);
 
   const table = useReactTable({
     data,

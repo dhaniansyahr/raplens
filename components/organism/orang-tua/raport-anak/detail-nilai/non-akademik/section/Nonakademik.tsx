@@ -1,6 +1,42 @@
-import Olahraga from "../charts/Olahraga";
+import { useEffect, useState } from "react";
+import Olahraga from "../charts/OlahragaSiswa";
+import axios from "axios";
+import OlahragaSiswa from "../charts/OlahragaSiswa";
+import SeniSiswa from "../charts/SeniSiswa";
+import OlimpiadeSiswa from "../charts/OlimpiadeSiswa";
+import KeterampilanSiswa from "../charts/KeterampilanSiswa";
 
 export default function Nonakademik() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const getData = async (token: string) => {
+    setLoading(true);
+    axios
+      .get("/api/visualisasi/orang-tua/detail-non-akademik", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setData(res.data.data);
+
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("raplens");
+    if (temp) {
+      const data = JSON.parse(temp);
+      getData(data?.token);
+    }
+  }, []);
+
   return (
     <section className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
@@ -27,7 +63,7 @@ export default function Nonakademik() {
           <h1 className="text-base font-normal">
             Tingkat Partisipasi Anak Dalam Ekstrakulikuler Olahraga
           </h1>
-          <Olahraga />
+          <OlahragaSiswa data={data?.olahraga} />
         </div>
       </div>
 
@@ -50,7 +86,7 @@ export default function Nonakademik() {
             Tingkat Partisipasi Anak Dalam Ekstrakulikuler Seni
           </h1>
 
-          <Olahraga />
+          <SeniSiswa data={data?.seni} />
         </div>
       </div>
 
@@ -73,7 +109,7 @@ export default function Nonakademik() {
             Tingkat Partisipasi Anak Dalam Ekstrakulikuler Olimpiade
           </h1>
 
-          <Olahraga />
+          <OlimpiadeSiswa data={data?.olimpiade} />
         </div>
       </div>
 
@@ -96,7 +132,7 @@ export default function Nonakademik() {
             Tingkat Partisipasi Anak Dalam Ekstrakulikuler Keterampilan
           </h1>
 
-          <Olahraga />
+          <KeterampilanSiswa data={data?.keterampilan} />
         </div>
       </div>
     </section>

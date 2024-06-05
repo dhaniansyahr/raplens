@@ -1,10 +1,10 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import Akademik from "@/components/organism/orang-tua/raport-anak/detail-nilai/akademik/section/Akademik";
+import GuruAkademik from "@/components/organism/guru/raport-anak/visualisasi/akademik-guru/sections/GuruAkademik";
 import { useState } from "react";
 
-export default function Page() {
+export default function Page({ params }: { params: { name: string } }) {
   const [sideOpen, setSideOpen] = useState<boolean>(false);
 
   return (
@@ -13,7 +13,7 @@ export default function Page() {
       <div className="flex flex-row">
         <Sidebar isOpen={sideOpen} onClose={setSideOpen} />
         <div className="w-full h-full py-24 px-6 lg:p-24 lg:pt-[125px] max-h-screen overflow-y-scroll">
-          <Akademik />
+          <GuruAkademik name={params.name} />
         </div>
       </div>
     </main>

@@ -1,6 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { v4 as randomUUID } from "uuid";
+import { seedKelas } from "./seeds/seedKelas";
+import { seedSemester } from "./seeds/seedSemester";
+import { seedAkademik } from "./seeds/seedAkademik";
+import { seedNonAkademik } from "./seeds/seedNonAkademik";
+import { seedKehadiran } from "./seeds/seedKehadiran";
+import { seedSikap } from "./seeds/seedSikap";
 
 const prisma = new PrismaClient();
 
@@ -50,6 +56,8 @@ async function seedsUser() {
 
 async function seedsSiswa() {
   const countSiswa = await prisma.siswa.count();
+  const kelas = await prisma.kelas.findMany();
+  const semester = await prisma.semester.findMany();
 
   if (countSiswa === 0) {
     await prisma.siswa.createMany({
@@ -68,6 +76,8 @@ async function seedsSiswa() {
           pekerjaan_ayah: "PNS",
           pekerjaan_ibu: "Guru",
           jenis_kelamin: "Laki-laki",
+          kelasId: kelas[0].id,
+          semesterId: semester[0].id,
         },
         {
           id: randomUUID(),
@@ -83,6 +93,8 @@ async function seedsSiswa() {
           pekerjaan_ayah: "PNS",
           pekerjaan_ibu: "Guru",
           jenis_kelamin: "Perempuan",
+          kelasId: kelas[1].id,
+          semesterId: semester[0].id,
         },
         {
           id: randomUUID(),
@@ -98,15 +110,25 @@ async function seedsSiswa() {
           pekerjaan_ayah: "PNS",
           pekerjaan_ibu: "Guru",
           jenis_kelamin: "Laki-laki",
+          kelasId: kelas[2].id,
+          semesterId: semester[0].id,
         },
       ],
     });
   }
+
+  console.log("Siswa seeded and associated with Kelas and Semester");
 }
 
 async function main() {
+  await seedKelas();
+  await seedSemester();
   await seedsUser();
   await seedsSiswa();
+  await seedAkademik();
+  await seedNonAkademik();
+  await seedKehadiran();
+  await seedSikap();
 }
 
 main().then(() => {

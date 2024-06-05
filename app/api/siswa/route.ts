@@ -77,8 +77,6 @@ const POST = async (req: any) => {
 
     const data: any = await req.json();
 
-    console.log("Data:", data);
-
     if (verifyToken.role === "GURU") {
       if (!data.nama || !data.nisn || !data.nis) {
         return NextResponse.json(

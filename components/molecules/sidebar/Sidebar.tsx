@@ -204,7 +204,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
               className={`flex justify-between items-center cursor-pointer`}
               onClick={() => {
                 if (role === "GURU") {
-                  router.push("/guru/raport-siswa");
+                  router.push("/guru/raport-siswa/data-raport");
                 } else {
                   router.push("/orang-tua/raport-anak");
                 }

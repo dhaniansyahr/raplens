@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import {
   XAxis,
   YAxis,
@@ -32,7 +34,7 @@ const data = [
   },
 ];
 
-export default function GrafikNilai() {
+export default function GrafikNilai({ data }: { data: any }) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <AreaChart

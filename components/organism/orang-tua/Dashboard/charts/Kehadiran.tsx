@@ -1,12 +1,7 @@
 import React, { PureComponent } from "react";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
-const data = [
-  { name: "Group A", value: 1600 },
-  { name: "Group B", value: 300 },
-];
-
-const COLORS = ["#0088FE", "#00C49F"];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({
@@ -35,7 +30,7 @@ const renderCustomizedLabel = ({
   );
 };
 
-export default function Kehadiran() {
+export default function Kehadiran({ data }: { data: any }) {
   return (
     <ResponsiveContainer width="100%" height={200}>
       <PieChart width={800} height={800}>
@@ -49,7 +44,7 @@ export default function Kehadiran() {
           fill="#8884d8"
           dataKey="value"
         >
-          {data.map((entry, index) => (
+          {data?.map((entry: any, index: number) => (
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>

@@ -1,4 +1,3 @@
-import AkademikLineChart from "@/components/organism/orang-tua/Dashboard/charts/AkademikLineChart";
 import {
   Select,
   SelectContent,
@@ -7,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import LineChartAnalisis from "./charts/LineChartAnalisis";
 
 export default function AnalisaPerkembangan() {
   return (
@@ -40,7 +40,7 @@ export default function AnalisaPerkembangan() {
           </div>
         </div>
         <div className="w-full">
-          <AkademikLineChart />
+          <LineChartAnalisis />
         </div>
       </div>
 
@@ -73,7 +73,7 @@ export default function AnalisaPerkembangan() {
           </div>
         </div>
         <div className="w-full">
-          <AkademikLineChart />
+          <LineChartAnalisis />
         </div>
       </div>
 
@@ -102,7 +102,7 @@ export default function AnalisaPerkembangan() {
           </div>
         </div>
         <div className="w-full">
-          <AkademikLineChart />
+          <LineChartAnalisis />
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default function AnalisaPerkembangan() {
           </div>
         </div>
         <div className="w-full">
-          <AkademikLineChart />
+          <LineChartAnalisis />
         </div>
       </div>
     </section>

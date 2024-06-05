@@ -1,6 +1,42 @@
-import Kedisiplinan from "../charts/Kedisiplinan";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import KedisiplinanSiswa from "../charts/KedisiplinanSiswa";
+import TanggungJawabSiswa from "../charts/TanggungJawabSiswa";
+import KerjaSamaSiswa from "../charts/KerjaSamaSiswa";
+import AdaptasiSiswa from "../charts/AdaptasiSiswa";
+import EtikaBelajarSiswa from "../charts/EtikaBelajarSiswa";
 
 export default function SikapDanPerilaku() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const getData = async (token: string) => {
+    setLoading(true);
+    axios
+      .get("/api/visualisasi/orang-tua/detail-sikap", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setData(res.data.data);
+
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("raplens");
+    if (temp) {
+      const data = JSON.parse(temp);
+      getData(data?.token);
+    }
+  }, []);
+
   return (
     <section className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
@@ -14,15 +50,16 @@ export default function SikapDanPerilaku() {
           <h1 className="font-bold text-3xl text-[#77B9E5]">Kedisiplinan</h1>
           <div className="flex flex-col gap-4 w-full p-10 rounded-3xl shadow-xl shadow-blue-400 h-full">
             <h1 className="font-bold text-base">Catatan Guru</h1>
-            <p className="font-light text-base">Catatan Guru disini</p>
+            <p className="font-light text-base">
+              {data?.notesGuru?.kedisiplinan.catatan}
+            </p>
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-base font-normal text-center">
-            Penilaian Kedisiplinan Anak <br />
-            Skala (1 - 5)
+            Penilaian Kedisiplinan Anak
           </h1>
-          <Kedisiplinan />
+          <KedisiplinanSiswa data={data?.kedisiplinan} />
         </div>
       </div>
 
@@ -31,15 +68,16 @@ export default function SikapDanPerilaku() {
           <h1 className="font-bold text-3xl text-[#77B9E5]">Tanggung Jawab</h1>
           <div className="flex flex-col gap-4 w-full p-10 rounded-3xl shadow-xl shadow-blue-400 h-full">
             <h1 className="font-bold text-base">Catatan Guru</h1>
-            <p className="font-light text-base">Catatan Guru disini</p>
+            <p className="font-light text-base">
+              {data?.notesGuru?.tanggungJawab.catatan}
+            </p>
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-base font-normal text-center">
-            Penilaian Tanggung Jawab Anak <br />
-            Skala (1 - 5)
+            Penilaian Tanggung Jawab Anak
           </h1>
-          <Kedisiplinan />
+          <TanggungJawabSiswa data={data?.tanggungJawab} />
         </div>
       </div>
 
@@ -48,15 +86,16 @@ export default function SikapDanPerilaku() {
           <h1 className="font-bold text-3xl text-[#77B9E5]">Adaptasi</h1>
           <div className="flex flex-col gap-4 w-full p-10 rounded-3xl shadow-xl shadow-blue-400 h-full">
             <h1 className="font-bold text-base">Catatan Guru</h1>
-            <p className="font-light text-base">Catatan Guru disini</p>
+            <p className="font-light text-base">
+              {data?.notesGuru?.adaptasi.catatan}
+            </p>
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-base font-normal text-center">
-            Penilaian Adaptasi Anak <br />
-            Skala (1 - 5)
+            Penilaian Adaptasi Anak
           </h1>
-          <Kedisiplinan />
+          <KerjaSamaSiswa data={data?.kerjaSama} />
         </div>
       </div>
 
@@ -65,15 +104,16 @@ export default function SikapDanPerilaku() {
           <h1 className="font-bold text-3xl text-[#77B9E5]">Kerja Sama</h1>
           <div className="flex flex-col gap-4 w-full p-10 rounded-3xl shadow-xl shadow-blue-400 h-full">
             <h1 className="font-bold text-base">Catatan Guru</h1>
-            <p className="font-light text-base">Catatan Guru disini</p>
+            <p className="font-light text-base">
+              {data?.notesGuru?.kerjaSama?.catatan}
+            </p>
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-base font-normal text-center">
-            Penilaian Kerja Sama Anak <br />
-            Skala (1 - 5)
+            Penilaian Kerja Sama Anak
           </h1>
-          <Kedisiplinan />
+          <AdaptasiSiswa data={data?.adaptasi} />
         </div>
       </div>
 
@@ -82,15 +122,16 @@ export default function SikapDanPerilaku() {
           <h1 className="font-bold text-3xl text-[#77B9E5]">Etika Belajar</h1>
           <div className="flex flex-col gap-4 w-full p-10 rounded-3xl shadow-xl shadow-blue-400 h-full">
             <h1 className="font-bold text-base">Catatan Guru</h1>
-            <p className="font-light text-base">Catatan Guru disini</p>
+            <p className="font-light text-base">
+              {data?.notesGuru?.etikaBelajar.catatan}
+            </p>
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
           <h1 className="text-base font-normal text-center">
-            Penilaian Etika Belajar Anak <br />
-            Skala (1 - 5)
+            Penilaian Etika Belajar Anak
           </h1>
-          <Kedisiplinan />
+          <EtikaBelajarSiswa data={data?.etikaBelajar} />
         </div>
       </div>
     </section>

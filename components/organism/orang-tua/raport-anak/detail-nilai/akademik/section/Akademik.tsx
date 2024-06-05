@@ -1,14 +1,42 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Matematika from "../charts/Matematika";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import SeniBudayaSiswa from "../charts/SeniBudayaSiswa";
+import IpsSiswa from "../charts/IpsSiswa";
+import IpaSiswa from "../charts/IpaSiswa";
+import BahasaIndonesiaSiswa from "../charts/BahasaIndonesiaSiswa";
 
 export default function Akademik() {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const getData = async (token: string) => {
+    setLoading(true);
+    axios
+      .get("/api/visualisasi/orang-tua/detail-akademik", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setData(res.data.data);
+
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("raplens");
+    if (temp) {
+      const data = JSON.parse(temp);
+      getData(data?.token);
+    }
+  }, []);
+
   return (
     <section className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
@@ -32,17 +60,7 @@ export default function Akademik() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
-          <Select>
-            <SelectTrigger className="w-full max-w-[280px] h-[40px] rounded-full">
-              <SelectValue placeholder="Tugas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="GANJIL_2023/2024">Tugas</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Matematika />
+          <Matematika data={data?.matematika} />
         </div>
       </div>
 
@@ -63,46 +81,7 @@ export default function Akademik() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
-          <Select>
-            <SelectTrigger className="w-full max-w-[280px] h-[40px] rounded-full">
-              <SelectValue placeholder="Tugas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="GANJIL_2023/2024">Tugas</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Matematika />
-        </div>
-      </div>
-
-      <div className="w-full bg-white p-16 md:p-10 rounded-2xl flex flex-col gap-6 lg:grid lg:grid-cols-2">
-        <div className="flex flex-col gap-4">
-          <h1 className="font-bold text-3xl text-[#77B9E5]">Bahasa Inggris</h1>
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-row gap-2 items-center">
-              <span className="size-4 bg-[#8884d8] rounded-full"></span>
-              <h1 className="text-sm font-normal">Nilai Rata - Rata Kelas</h1>
-            </div>
-            <div className="flex flex-row gap-2 items-center">
-              <span className="size-4 bg-[#82ca9d] rounded-full"></span>
-              <h1 className="text-sm font-normal">Nilai Anak</h1>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col items-center gap-6">
-          <Select>
-            <SelectTrigger className="w-full max-w-[280px] h-[40px] rounded-full">
-              <SelectValue placeholder="Tugas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="GANJIL_2023/2024">Tugas</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Matematika />
+          <BahasaIndonesiaSiswa data={data?.bahasa_indonesia} />
         </div>
       </div>
 
@@ -123,17 +102,7 @@ export default function Akademik() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
-          <Select>
-            <SelectTrigger className="w-full max-w-[280px] h-[40px] rounded-full">
-              <SelectValue placeholder="Tugas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="GANJIL_2023/2024">Tugas</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Matematika />
+          <IpaSiswa data={data?.ipa} />
         </div>
       </div>
 
@@ -154,17 +123,7 @@ export default function Akademik() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
-          <Select>
-            <SelectTrigger className="w-full max-w-[280px] h-[40px] rounded-full">
-              <SelectValue placeholder="Tugas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="GANJIL_2023/2024">Tugas</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Matematika />
+          <IpsSiswa data={data?.ips} />
         </div>
       </div>
 
@@ -183,17 +142,7 @@ export default function Akademik() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-6">
-          <Select>
-            <SelectTrigger className="w-full max-w-[280px] h-[40px] rounded-full">
-              <SelectValue placeholder="Tugas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="GANJIL_2023/2024">Tugas</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Matematika />
+          <SeniBudayaSiswa data={data?.seni_budaya} />
         </div>
       </div>
     </section>
