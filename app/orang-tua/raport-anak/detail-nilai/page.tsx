@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import Menu from "@/components/oragnism/orang-tua/raport-anak/detail-nilai/section/Menu";
+import Menu from "@/components/organism/orang-tua/raport-anak/detail-nilai/section/Menu";
 import { useState } from "react";
 
 export default function Page() {

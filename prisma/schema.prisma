@@ -1,0 +1,349 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id
+  email     String   @unique
+  password  String
+  role      Role     @default(ORANG_TUA)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String?
+}
+
+model Siswa {
+  id               String             @id @unique
+  nama             String
+  nisn             String
+  nis              String
+  tempat_lahir     String
+  tanggal_lahir    String
+  alamat           String
+  agama            String
+  nama_ayah        String
+  nama_ibu         String
+  pekerjaan_ayah   String
+  pekerjaan_ibu    String
+  jenis_kelamin    String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  Kelas            Kelas?             @relation(fields: [kelasId], references: [id])
+  kelasId          String?
+  Kehadiran        Kehadiran[]
+  Semester         Semester?          @relation(fields: [semesterId], references: [id])
+  semesterId       String?
+  Akademik         Akademik[]
+  NonAkademik      NonAkademik[]
+  SikapDanPerilaku SikapDanPerilaku[]
+}
+
+enum Role {
+  ORANG_TUA
+  GURU
+}
+
+model Kelas {
+  id               String             @id @unique
+  name             String
+  Kehadiran        Kehadiran[]
+  Akademik         Akademik[]
+  NonAkademik      NonAkademik[]
+  SikapDanPerilaku SikapDanPerilaku[]
+  Siswa            Siswa[]
+}
+
+model Semester {
+  id               String             @id @unique
+  name             String
+  Kehadiran        Kehadiran[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  Akademik         Akademik[]
+  NonAkademik      NonAkademik[]
+  Matematika       Matematika[]
+  BahasaIndonesia  BahasaIndonesia[]
+  Ipa              Ipa[]
+  Ips              Ips[]
+  SeniBudaya       SeniBudaya[]
+  Olahraga         Olahraga[]
+  Seni             Seni[]
+  Olimpiade        Olimpiade[]
+  Keterampilan     Keterampilan[]
+  SikapDanPerilaku SikapDanPerilaku[]
+  Kedisiplinan     Kedisiplinan[]
+  TanggungJawab    TanggungJawab[]
+  Adaptasi         Adaptasi[]
+  KerjaSama        KerjaSama[]
+  EtikaBelajar     EtikaBelajar[]
+  Siswa            Siswa[]
+}
+
+model Kehadiran {
+  id         String   @id @unique
+  siswa      Siswa    @relation(fields: [siswaId], references: [id])
+  siswaId    String
+  kelas      Kelas    @relation(fields: [kelasId], references: [id])
+  kelasId    String
+  Semester   Semester @relation(fields: [semesterId], references: [id])
+  semesterId String
+  hadir      Int
+  sakit      Int
+  izin       Int
+  alpa       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Akademik {
+  id                String           @id @unique
+  Siswa             Siswa            @relation(fields: [siswaId], references: [id])
+  siswaId           String
+  Semester          Semester         @relation(fields: [semesterId], references: [id])
+  semesterId        String
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  Matematika        Matematika?      @relation(fields: [matematikaId], references: [id])
+  matematikaId      String?
+  BahasaIndonesia   BahasaIndonesia? @relation(fields: [bahasaIndonesiaId], references: [id])
+  bahasaIndonesiaId String?
+  Ipa               Ipa?             @relation(fields: [ipaId], references: [id])
+  ipaId             String?
+  Ips               Ips?             @relation(fields: [ipsId], references: [id])
+  ipsId             String?
+  SeniBudaya        SeniBudaya?      @relation(fields: [seniBudayaId], references: [id])
+  seniBudayaId      String?
+  Kelas             Kelas?           @relation(fields: [kelasId], references: [id])
+  kelasId           String?
+}
+
+model Matematika {
+  id         String     @id @unique
+  Semester   Semester   @relation(fields: [semesterId], references: [id])
+  semesterId String
+  uas        Int
+  uts        Int
+  tugas_1    Int
+  tugas_2    Int
+  Akademik   Akademik[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model BahasaIndonesia {
+  id         String     @id @unique
+  Semester   Semester   @relation(fields: [semesterId], references: [id])
+  semesterId String
+  uas        Int
+  uts        Int
+  tugas_1    Int
+  tugas_2    Int
+  Akademik   Akademik[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Ipa {
+  id         String     @id @unique
+  Semester   Semester   @relation(fields: [semesterId], references: [id])
+  semesterId String
+  uas        Int
+  uts        Int
+  tugas_1    Int
+  tugas_2    Int
+  Akademik   Akademik[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Ips {
+  id         String     @id @unique
+  Semester   Semester   @relation(fields: [semesterId], references: [id])
+  semesterId String
+  uas        Int
+  uts        Int
+  tugas_1    Int
+  tugas_2    Int
+  Akademik   Akademik[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model SeniBudaya {
+  id         String     @id @unique
+  Semester   Semester   @relation(fields: [semesterId], references: [id])
+  semesterId String
+  uas        Int
+  uts        Int
+  tugas_1    Int
+  tugas_2    Int
+  Akademik   Akademik[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model NonAkademik {
+  id             String        @id @unique
+  Siswa          Siswa         @relation(fields: [siswaId], references: [id])
+  siswaId        String
+  Semester       Semester      @relation(fields: [semesterId], references: [id])
+  semesterId     String
+  Olahraga       Olahraga?     @relation(fields: [olahragaId], references: [id])
+  olahragaId     String?
+  Seni           Seni?         @relation(fields: [seniId], references: [id])
+  seniId         String?
+  Olimpiade      Olimpiade?    @relation(fields: [olimpiadeId], references: [id])
+  olimpiadeId    String?
+  Keterampilan   Keterampilan? @relation(fields: [keterampilanId], references: [id])
+  keterampilanId String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  Kelas          Kelas?        @relation(fields: [kelasId], references: [id])
+  kelasId        String?
+}
+
+model Olahraga {
+  id          String        @id @unique
+  Semester    Semester      @relation(fields: [semesterId], references: [id])
+  semesterId  String
+  uas         Int
+  uts         Int
+  tugas_1     Int
+  tugas_2     Int
+  NonAkademik NonAkademik[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Seni {
+  id          String        @id @unique
+  Semester    Semester      @relation(fields: [semesterId], references: [id])
+  semesterId  String
+  uas         Int
+  uts         Int
+  tugas_1     Int
+  tugas_2     Int
+  NOnAkademik NonAkademik[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Olimpiade {
+  id          String        @id @unique
+  Semester    Semester      @relation(fields: [semesterId], references: [id])
+  semesterId  String
+  uas         Int
+  uts         Int
+  tugas_1     Int
+  tugas_2     Int
+  NonAkademik NonAkademik[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Keterampilan {
+  id          String        @id @unique
+  Semester    Semester      @relation(fields: [semesterId], references: [id])
+  semesterId  String
+  uas         Int
+  uts         Int
+  tugas_1     Int
+  tugas_2     Int
+  NonAkademik NonAkademik[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model SikapDanPerilaku {
+  id              String         @id @unique
+  Siswa           Siswa          @relation(fields: [siswaId], references: [id])
+  siswaId         String
+  Semester        Semester       @relation(fields: [semesterId], references: [id])
+  semesterId      String
+  Kelas           Kelas          @relation(fields: [kelasId], references: [id])
+  kelasId         String
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  Kedisiplinan    Kedisiplinan?  @relation(fields: [kedisiplinanId], references: [id])
+  kedisiplinanId  String?
+  TanggungJawab   TanggungJawab? @relation(fields: [tanggungJawabId], references: [id])
+  tanggungJawabId String?
+  Adaptasi        Adaptasi?      @relation(fields: [adaptasiId], references: [id])
+  adaptasiId      String?
+  KerjaSama       KerjaSama?     @relation(fields: [kerjaSamaId], references: [id])
+  kerjaSamaId     String?
+  EtikaBelajar    EtikaBelajar?  @relation(fields: [etikaBelajarId], references: [id])
+  etikaBelajarId  String?
+}
+
+model Kedisiplinan {
+  id               String             @id @unique
+  Semester         Semester           @relation(fields: [semesterId], references: [id])
+  semesterId       String
+  kehadiran        Int
+  keterlambatan    Int
+  kepatuhan        Int
+  kerapihan        Int
+  catatan          String
+  SikapDahPerilaku SikapDanPerilaku[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model TanggungJawab {
+  id               String             @id @unique
+  Semester         Semester           @relation(fields: [semesterId], references: [id])
+  semesterId       String
+  tugas            Int
+  kebersihan       Int
+  kepemimpinan     Int
+  catatan          String
+  SikapDanPerilaku SikapDanPerilaku[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model Adaptasi {
+  id               String             @id @unique
+  Semester         Semester           @relation(fields: [semesterId], references: [id])
+  semesterId       String
+  kehadiran        Int
+  keterlambatan    Int
+  kepatuhan        Int
+  kerapihan        Int
+  catatan          String
+  SikapDanPerilaku SikapDanPerilaku[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model KerjaSama {
+  id               String             @id @unique
+  Semester         Semester           @relation(fields: [semesterId], references: [id])
+  semesterId       String
+  kerjaTim         Int
+  kerjaSama        Int
+  komunikasi       Int
+  catatan          String
+  SikapDanPerilaku SikapDanPerilaku[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model EtikaBelajar {
+  id               String             @id @unique
+  Semester         Semester           @relation(fields: [semesterId], references: [id])
+  semesterId       String
+  kerajinan        Int
+  integrasi        Int
+  konsentrasi      Int
+  catatan          String
+  SikapDanPerilaku SikapDanPerilaku[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}

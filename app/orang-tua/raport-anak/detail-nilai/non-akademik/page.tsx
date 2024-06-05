@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import Nonakademik from "@/components/oragnism/orang-tua/raport-anak/detail-nilai/non-akademik/section/Nonakademik";
+import Nonakademik from "@/components/organism/orang-tua/raport-anak/detail-nilai/non-akademik/section/Nonakademik";
 import { useState } from "react";
 
 export default function Page() {

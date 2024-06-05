@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import SikapDanPerilaku from "@/components/oragnism/orang-tua/raport-anak/detail-nilai/sikap-dan-perilaku/section/SikapDanPerilaku";
+import SikapDanPerilaku from "@/components/organism/orang-tua/raport-anak/detail-nilai/sikap-dan-perilaku/section/SikapDanPerilaku";
 import { useState } from "react";
 
 export default function Page() {

@@ -5,7 +5,7 @@ import { HiOutlineBookmarkAlt } from "react-icons/hi";
 import { RiCoinsLine } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdLogOut } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { MdOutlineDashboard } from "react-icons/md";
@@ -23,6 +23,16 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(true);
+  const [role, setRole] = useState<string>("");
+
+  useEffect(() => {
+    const temp =
+      typeof window !== "undefined" && localStorage.getItem("raplens");
+    if (temp) {
+      const data = JSON.parse(temp);
+      setRole(data.name?.role);
+    }
+  }, []);
 
   return (
     <>
@@ -170,7 +180,8 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   ? "bg-[#5DADE2] bg-opacity-10 rounded-md"
                   : "text-neutral-600"
               }`}
-              onClick={() => router.push("/orang-tua/dashboard")}
+              onClick={() => router.push("/guru/dashboard")}
+              // onClick={() => router.push("/orang-tua/dashboard")}
             >
               <MdOutlineDashboard size={24} className="flex-shrink-0" />
               {isOpen && (
@@ -191,7 +202,14 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
 
             <div
               className={`flex justify-between items-center cursor-pointer`}
-              onClick={() => setOpen(!open)}
+              onClick={() => {
+                if (role === "GURU") {
+                  router.push("/guru/raport-siswa/data-raport");
+                } else {
+                  router.push("/orang-tua/raport-anak");
+                }
+                setOpen(!open);
+              }}
             >
               <div
                 className={`flex flex-row gap-3 p-3 items-center rounded cursor-pointer`}
@@ -208,7 +226,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                     }}
                     className="text-base leading-6 font-medium"
                   >
-                    Raport Anak
+                    {role === "GURU" ? "Raport Siswa" : "Raport Anak"}
                   </motion.h1>
                 )}
               </div>
@@ -243,22 +261,47 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   },
                 }}
               >
-                <div
-                  onClick={() =>
-                    router.push("/orang-tua/raport-anak/ringkasan-nilai")
-                  }
-                  className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
-                >
-                  <span className="text-xl font-normal">Ringkasan Nilai</span>
-                </div>
-                <div
-                  onClick={() =>
-                    router.push("/orang-tua/raport-anak/detail-nilai")
-                  }
-                  className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
-                >
-                  <span className="text-xl font-normal">Detail Nilai</span>
-                </div>
+                {role === "GURU" ? (
+                  <>
+                    <div
+                      onClick={() =>
+                        router.push("/guru/raport-siswa/data-raport")
+                      }
+                      className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                    >
+                      <span className="text-xl font-normal">Data Raport</span>
+                    </div>
+                    <div
+                      onClick={() =>
+                        router.push("/guru/raport-siswa/visualisasi")
+                      }
+                      className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                    >
+                      <span className="text-xl font-normal">Visualisasi</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      onClick={() =>
+                        router.push("/orang-tua/raport-anak/ringkasan-nilai")
+                      }
+                      className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                    >
+                      <span className="text-xl font-normal">
+                        Ringkasan Nilai
+                      </span>
+                    </div>
+                    <div
+                      onClick={() =>
+                        router.push("/orang-tua/raport-anak/detail-nilai")
+                      }
+                      className="cursor-pointer border border-[#5DADE2] rounded-xl text-center flex items-center justify-center py-2"
+                    >
+                      <span className="text-xl font-normal">Detail Nilai</span>
+                    </div>
+                  </>
+                )}
               </motion.div>
             )}
           </div>
