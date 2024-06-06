@@ -33,6 +33,11 @@ export default function GuruNonAkademik({ name }: { name: string }) {
   useEffect(() => {
     getData();
   }, []);
+
+  if (loading || !data) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <section className="flex flex-col gap-6 w-full">
       <div className="flex flex-col gap-4 justify-center items-center w-full h-full">
