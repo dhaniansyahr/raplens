@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
 import React, { PureComponent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -43,15 +44,15 @@ export default function PersentaseKehadiran() {
   const [data, setData] = useState<any>(null);
   const [keys, setKeys] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("");
+  const auth = useAuth();
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     toast.loading("Loading...");
     axios
       .get("/api/nilai/persentase-kehadiran", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -87,14 +88,13 @@ export default function PersentaseKehadiran() {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      setToken(data.token);
-      getData(data?.token);
-    }
+    getData();
   }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <ResponsiveContainer width="100%" height={500}>
       <PieChart width={800} height={800}>

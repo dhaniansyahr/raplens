@@ -12,8 +12,11 @@ import AnalisaAkademik from "./charts/AnalisaAkademik";
 import AnalisaNonAkademik from "./charts/AnalisaNonAkademik";
 import AnalisaKehadiran from "./charts/AnalisaKehadiran";
 import AnalisaSikap from "./charts/AnalisaSikap";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AnalisaPerkembangan({ name }: { name: string }) {
+  const auth = useAuth();
+
   const [selectedAkademik, setSelectedAkademik] =
     useState<string>("Matematika");
   const [dataAkademik, setDataAkademik] = useState<any>(null);
@@ -28,7 +31,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
   const [selectedSikap, setSelectedSikap] = useState<string>("Kedisiplinan");
   const [dataSikap, setDataSikap] = useState<any>(null);
 
-  const getAkademik = (akademik: string) => {
+  const getAkademik = () => {
     axios
       .get(
         `/api/visualisasi/guru/analisa-perkembangan/akademik?nama=${name}&mapel=${
@@ -36,7 +39,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
         }`,
         {
           headers: {
-            Authorization: `Bearer ${akademik}`,
+            Authorization: `Bearer ${auth.auth?.accessToken}`,
           },
         }
       )
@@ -48,16 +51,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
       });
   };
 
-  useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getAkademik(data?.token);
-    }
-  }, [selectedAkademik]);
-
-  const getNonAkademik = (akademik: string) => {
+  const getNonAkademik = () => {
     axios
       .get(
         `/api/visualisasi/guru/analisa-perkembangan/non-akademik?nama=${name}&mapel=${
@@ -65,7 +59,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
         }`,
         {
           headers: {
-            Authorization: `Bearer ${akademik}`,
+            Authorization: `Bearer ${auth.auth?.accessToken}`,
           },
         }
       )
@@ -77,16 +71,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
       });
   };
 
-  useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getNonAkademik(data?.token);
-    }
-  }, [selectedNonAkademik]);
-
-  const getKehadiran = (token: string) => {
+  const getKehadiran = () => {
     axios
       .get(
         `/api/visualisasi/guru/analisa-perkembangan/kehadiran?nama=${name}&key=${
@@ -94,7 +79,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
         }`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${auth.auth?.accessToken}`,
           },
         }
       )
@@ -106,16 +91,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
       });
   };
 
-  useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getKehadiran(data?.token);
-    }
-  }, [selectedKehadiran]);
-
-  const getSikap = (token: string) => {
+  const getSikap = () => {
     axios
       .get(
         `/api/visualisasi/guru/analisa-perkembangan/sikap-dan-perilaku?nama=${name}&key=${
@@ -123,7 +99,7 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
         }`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${auth.auth?.accessToken}`,
           },
         }
       )
@@ -136,13 +112,11 @@ export default function AnalisaPerkembangan({ name }: { name: string }) {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getSikap(data?.token);
-    }
-  }, [selectedSikap]);
+    getAkademik();
+    getNonAkademik();
+    getKehadiran();
+    getSikap();
+  }, [selectedAkademik, selectedNonAkademik, selectedKehadiran, selectedSikap]);
 
   return (
     <section className="flex flex-col gap-6 w-full">

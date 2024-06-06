@@ -16,16 +16,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 export function DialogAdd({
-  token,
   onClose,
   isOpen,
 }: {
-  token: string;
   onClose: (v: boolean) => void;
   isOpen: boolean;
 }) {
@@ -47,6 +46,7 @@ export function DialogAdd({
   const [pekerjaanIbu, setPekerjaanIbu] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
+  const auth = useAuth();
 
   const handleCreate = () => {
     setLoading(true);
@@ -70,7 +70,7 @@ export function DialogAdd({
     axios
       .post("/api/siswa", body, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {

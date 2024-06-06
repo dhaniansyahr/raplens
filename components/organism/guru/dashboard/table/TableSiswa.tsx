@@ -25,6 +25,7 @@ import PersentaseKehadiran from "../charts/PersentaseKehadiran";
 import { DialogDetail } from "../dialog/DialogDetail";
 import { DialogEdit } from "../dialog/DialogEdit";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export type Data = {
   id: string;
@@ -35,20 +36,16 @@ export type Data = {
 
 export default function TableSiswa() {
   const router = useRouter();
+
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("");
+
   const [open, setOpen] = useState<boolean>(false);
   const tanggal = new Date().toLocaleDateString();
 
+  const auth = useAuth();
+
   const columns: ColumnDef<Data>[] = [
-    // {
-    //   accessorKey: "id",
-    //   header: "ID",
-    //   cell: ({ row }: any) => (
-    //     <div className="capitalize">{row.getValue("id")}</div>
-    //   ),
-    // },
     {
       accessorKey: "nama",
       header: "NAMA",
@@ -76,26 +73,13 @@ export default function TableSiswa() {
       header: "AKSI",
       enableHiding: false,
       cell: ({ row }: any) => {
-        // console.log("Row: ", row.original);
         return (
           <div className="flex flex-row gap-4 w-full items-center justify-center">
-            {/* <button className="bg-[#7AA4C0] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-              <span className="text-white font-medium text-base">Detail</span>
-            </button> */}
             <DialogDetail
-              token={token}
               onClose={(v: boolean) => setOpen(!v)}
               id={row.original.id}
             />
-            <DialogEdit
-              token={token}
-              onClose={setOpen}
-              id={row.original.id}
-              isOpen={open}
-            />
-            {/* <button className="bg-[#C5C80D] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
-              <span className="text-white font-medium text-base">Edit</span>
-            </button> */}
+            <DialogEdit onClose={setOpen} id={row.original.id} isOpen={open} />
             <button
               onClick={() => handleDelete(row.original.id)}
               className="bg-[#FD2943] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80"
@@ -108,12 +92,12 @@ export default function TableSiswa() {
     },
   ];
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     axios
       .get("/api/siswa", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -131,14 +115,14 @@ export default function TableSiswa() {
     axios
       .delete(`/api/siswa?id=${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
-        setLoading(false);
         toast.dismiss();
         toast.success("Data Siswa berhasil dihapus!");
-        getData(token);
+        getData();
+        setLoading(false);
       })
       .catch(() => {
         setLoading(false);
@@ -148,13 +132,7 @@ export default function TableSiswa() {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      setToken(data.token);
-      getData(data?.token);
-    }
+    getData();
   }, [open]);
 
   const table = useReactTable({
@@ -183,7 +161,7 @@ export default function TableSiswa() {
 
       <div className="flex flex-col gap-6">
         <h1 className="font-bold text-3xl text-white">Data Siswa</h1>
-        <DialogAdd token={token} onClose={setOpen} isOpen={open} />
+        <DialogAdd onClose={setOpen} isOpen={open} />
       </div>
 
       <div className="flex flex-col gap-4 bg-white">

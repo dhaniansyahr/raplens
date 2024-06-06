@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export type Data = {
   id: string;
@@ -30,9 +31,10 @@ export type Data = {
 
 export default function TableDataRaport() {
   const router = useRouter();
+  const auth = useAuth();
+
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
   const tanggal = new Date().toLocaleDateString();
 
@@ -57,7 +59,6 @@ export default function TableDataRaport() {
       header: "AKSI",
       enableHiding: false,
       cell: ({ row }: any) => {
-        // console.log("Row: ", row.original);
         return (
           <div className="flex flex-row gap-4 w-full items-center justify-center">
             <button
@@ -87,13 +88,13 @@ export default function TableDataRaport() {
     },
   ];
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     toast.loading("Loading...");
     axios
       .get("/api/siswa", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -115,14 +116,14 @@ export default function TableDataRaport() {
     axios
       .delete(`/api/siswa?id=${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
         setLoading(false);
         toast.dismiss();
         toast.success("Data Siswa berhasil dihapus!");
-        getData(token);
+        getData();
       })
       .catch(() => {
         setLoading(false);
@@ -132,13 +133,7 @@ export default function TableDataRaport() {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      setToken(data.token);
-      getData(data?.token);
-    }
+    getData();
   }, [open]);
 
   const table = useReactTable({

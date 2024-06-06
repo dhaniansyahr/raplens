@@ -1,5 +1,17 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import axios from "axios";
+import { LogOut } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoIosNotificationsOutline, IoMdMenu } from "react-icons/io";
 import { IoSearch } from "react-icons/io5";
@@ -12,14 +24,26 @@ export default function Navbar({
   setOpen: (value: boolean) => void;
 }) {
   const [nama, setNama] = useState<string>("Nama Pengguna");
+  const auth = useAuth();
+  const route = useRouter();
+
+  const getProfile = () => {
+    axios
+      .get("/api/profile", {
+        headers: {
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
+        },
+      })
+      .then((res) => {
+        setNama(res.data.data?.name);
+      })
+      .catch(() => {
+        console.log("error");
+      });
+  };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      setNama(data.name?.name);
-    }
+    getProfile();
   }, []);
 
   return (
@@ -52,10 +76,31 @@ export default function Navbar({
           <IoIosNotificationsOutline size={20} className="text-[#5DADE2]" />
         </button>
         <div className="flex flex-row gap-2 items-center">
-          <Avatar className="cursor-pointer">
-            <AvatarImage src="/sample-avatar.png" alt="User Avatar" />
-            <AvatarFallback>R</AvatarFallback>
-          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="cursor-pointer">
+                <AvatarImage src="/sample-avatar.png" alt="User Avatar" />
+                <AvatarFallback>R</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <button
+                  onClick={() => {
+                    auth.logout();
+                    route.push("/");
+                  }}
+                  className="flex flex-row gap-2"
+                >
+                  <LogOut size={18} className="text-neutral-800" />
+                  <span className="text-neutral-800 text-base leading-6 font-normal">
+                    Logout
+                  </span>
+                </button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <span className="hidden md:block font-bold text-base">
             {nama ?? "Nama Pengguna"}
           </span>

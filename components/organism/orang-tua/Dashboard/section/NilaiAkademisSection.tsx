@@ -10,8 +10,10 @@ import AkademikLineChart from "../charts/AkademikLineChart";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import NonAkademikLineChart from "../charts/NonAkademikLineChart";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function NilaiAkademisSection() {
+  const auth = useAuth();
   const [selectedAkademik, setSelectedAkademik] =
     useState<string>("Matematika");
   const [dataAkademik, setDataAkademik] = useState<any>(null);
@@ -20,7 +22,7 @@ export default function NilaiAkademisSection() {
     useState<string>("Olahraga");
   const [dataNonAkademik, setDataNonAkademik] = useState<any>(null);
 
-  const getAkademik = (akademik: string) => {
+  const getAkademik = () => {
     axios
       .get(
         `/api/nilai/dashboard-orang-tua/nilai-akademik?mapel=${
@@ -28,7 +30,7 @@ export default function NilaiAkademisSection() {
         }`,
         {
           headers: {
-            Authorization: `Bearer ${akademik}`,
+            Authorization: `Bearer ${auth.auth?.accessToken}`,
           },
         }
       )
@@ -40,16 +42,7 @@ export default function NilaiAkademisSection() {
       });
   };
 
-  useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getAkademik(data?.token);
-    }
-  }, [selectedAkademik]);
-
-  const getNonAkademik = (akademik: string) => {
+  const getNonAkademik = () => {
     axios
       .get(
         `/api/nilai/dashboard-orang-tua/nilai-non-akademik?mapel=${
@@ -57,7 +50,7 @@ export default function NilaiAkademisSection() {
         }`,
         {
           headers: {
-            Authorization: `Bearer ${akademik}`,
+            Authorization: `Bearer ${auth.auth?.accessToken}`,
           },
         }
       )
@@ -70,13 +63,9 @@ export default function NilaiAkademisSection() {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getNonAkademik(data?.token);
-    }
-  }, [selectedNonAkademik]);
+    getAkademik();
+    getNonAkademik();
+  }, [selectedAkademik, selectedNonAkademik]);
 
   return (
     <section className="flex flex-col gap-6 w-full">
