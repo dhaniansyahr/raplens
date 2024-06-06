@@ -11,29 +11,6 @@ import {
   Legend,
 } from "recharts";
 
-const data = [
-  {
-    name: "0",
-    nilai: 0,
-  },
-  {
-    name: "1",
-    nilai: 60,
-  },
-  {
-    name: "2",
-    nilai: 35,
-  },
-  {
-    name: "3",
-    nilai: 40,
-  },
-  {
-    name: "4",
-    nilai: 79,
-  },
-];
-
 export default function GrafikNilai({ data }: { data: any }) {
   return (
     <ResponsiveContainer width="100%" height={200}>

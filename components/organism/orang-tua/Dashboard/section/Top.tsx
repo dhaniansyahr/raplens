@@ -5,25 +5,27 @@ import NonAkademik from "../charts/NonAkademik";
 import RingkasanI from "../charts/RingkasanI";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Top() {
   const tanggal = new Date().toLocaleDateString();
   const router = useRouter();
+  const auth = useAuth();
 
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     axios
       .get("/api/nilai/dashboard-orang-tua", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
-        setLoading(false);
         setData(res.data.data);
+        setLoading(false);
       })
       .catch(() => {
         setLoading(false);
@@ -31,13 +33,12 @@ export default function Top() {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getData(data?.token);
-    }
+    getData();
   }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <section className="flex flex-col gap-6 w-full">

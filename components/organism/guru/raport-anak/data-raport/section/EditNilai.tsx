@@ -11,9 +11,12 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function EditNilai({ id }: { id: string }) {
+  const auth = useAuth();
   const router = useRouter();
+
   const [nama, setNama] = useState<string>("");
   const [semester, setSemester] = useState<string>("");
   const [kelas, setKelas] = useState<string>("");
@@ -43,16 +46,15 @@ export default function EditNilai({ id }: { id: string }) {
   const [dataKelas, setDataKelas] = useState<any>(null);
   const [dataSemester, setDataSemester] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("");
 
   const [detail, setDetail] = useState<any>(null);
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     axios
       .get("/api/semester", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -66,12 +68,12 @@ export default function EditNilai({ id }: { id: string }) {
       });
   };
 
-  const getKelas = async (token: string) => {
+  const getKelas = async () => {
     setLoading(true);
     axios
       .get("/api/kelas", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -85,13 +87,13 @@ export default function EditNilai({ id }: { id: string }) {
       });
   };
 
-  const handleData = (token: string) => {
+  const handleData = () => {
     setLoading(true);
 
     axios
       .get(`/api/nilai?id=${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -135,12 +137,10 @@ export default function EditNilai({ id }: { id: string }) {
       alpa: alpa,
     };
 
-    console.log(body);
-
     axios
       .put(`/api/nilai?nama=${nama}`, body, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -180,15 +180,9 @@ export default function EditNilai({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getData(data?.token);
-      getKelas(data?.token);
-      setToken(data?.token);
-      handleData(data?.token);
-    }
+    getData();
+    getKelas();
+    handleData();
   }, []);
 
   useEffect(() => {
@@ -215,7 +209,11 @@ export default function EditNilai({ id }: { id: string }) {
       setSakit(detail?.Kehadiran?.sakit);
       setAlpa(detail?.Kehadiran?.alpa);
     }
-  }, []);
+  }, [detail]);
+
+  if (loading || !detail) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <section className="flex flex-col gap-10">

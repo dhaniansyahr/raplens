@@ -16,18 +16,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
-import { headers } from "next/headers";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 export function DialogEdit({
-  token,
   onClose,
   id,
   isOpen,
 }: {
-  token: string;
   onClose: (v: boolean) => void;
   id: string;
   isOpen: boolean;
@@ -51,6 +49,7 @@ export function DialogEdit({
   const [pekerjaanIbu, setPekerjaanIbu] = useState<string>("");
 
   const [loading, setLoading] = useState<boolean>(false);
+  const auth = useAuth();
 
   const handleCreate = () => {
     setLoading(true);
@@ -74,7 +73,7 @@ export function DialogEdit({
     axios
       .put(`/api/siswa?id=${id}`, body, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -96,7 +95,7 @@ export function DialogEdit({
     axios
       .get(`/api/siswa/get-by-id?id=${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -131,6 +130,10 @@ export function DialogEdit({
       setPekerjaanIbu(detail.pekerjaan_ibu);
     }
   }, [detail]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <Dialog>

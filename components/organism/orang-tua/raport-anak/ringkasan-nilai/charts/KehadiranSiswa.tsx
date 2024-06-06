@@ -1,6 +1,4 @@
-import axios from "axios";
-import React, { PureComponent, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import React from "react";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
 const COLORS = [

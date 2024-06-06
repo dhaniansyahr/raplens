@@ -5,17 +5,20 @@ import BahasaIndonesia from "../charts/BahasaIndonesia";
 import Ipa from "../charts/Ipa";
 import Ips from "../charts/Ips";
 import SeniBudaya from "../charts/SeniBudaya";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function GuruAkademik({ name }: { name: string }) {
+  const auth = useAuth();
+
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     axios
       .get(`/api/visualisasi/guru/detail-akademik?nama=${name}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -29,13 +32,12 @@ export default function GuruAkademik({ name }: { name: string }) {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getData(data?.token);
-    }
+    getData();
   }, []);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <section className="flex flex-col gap-6 w-full">

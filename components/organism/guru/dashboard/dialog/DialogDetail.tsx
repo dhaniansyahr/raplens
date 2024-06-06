@@ -7,47 +7,47 @@ import {
   DialogFooter,
 } from "../../../../ui/dialog";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/hooks/useAuth";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export function DialogDetail({
-  token,
   onClose,
   id,
 }: {
-  token: string;
   onClose: (v: boolean) => void;
   id: string;
 }) {
   const [detail, setDetail] = useState<any>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const auth = useAuth();
 
   const handleDetail = () => {
     setLoading(true);
-    // toast.loading("Loading...");
 
     axios
       .get(`/api/siswa/get-by-id?id=${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
-        setLoading(false);
         setDetail(res.data.siswa);
-        // toast.dismiss();
-        // toast.success("Data Siswa successfully loaded!");
+        setLoading(false);
       })
       .catch((err) => {
         setLoading(false);
-        // toast.error("Failed to load data siswa");
       });
   };
 
   useEffect(() => {
     handleDetail();
   }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <Dialog>

@@ -1,17 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function DetailNilai({ id }: { id: string }) {
+  const auth = useAuth();
+
   const [nama, setNama] = useState<string>("");
   const [semester, setSemester] = useState<string>("");
   const [kelas, setKelas] = useState<string>("");
@@ -20,14 +15,13 @@ export default function DetailNilai({ id }: { id: string }) {
   const [dataKelas, setDataKelas] = useState<any>(null);
   const [dataSemester, setDataSemester] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("");
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     axios
       .get("/api/semester", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -41,12 +35,12 @@ export default function DetailNilai({ id }: { id: string }) {
       });
   };
 
-  const getKelas = async (token: string) => {
+  const getKelas = async () => {
     setLoading(true);
     axios
       .get("/api/kelas", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -60,13 +54,13 @@ export default function DetailNilai({ id }: { id: string }) {
       });
   };
 
-  const handleData = (token: string) => {
+  const handleData = () => {
     setLoading(true);
 
     axios
       .get(`/api/nilai?id=${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -84,15 +78,9 @@ export default function DetailNilai({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getData(data?.token);
-      getKelas(data?.token);
-      setToken(data?.token);
-      handleData(data?.token);
-    }
+    getData();
+    getKelas();
+    handleData();
   }, [detail]);
 
   return (

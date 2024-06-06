@@ -1,6 +1,7 @@
 "use client";
 import login from "@/actions/login/login";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth } from "@/hooks/useAuth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -9,10 +10,10 @@ import { IoMdMail } from "react-icons/io";
 
 export default function LoginForm() {
   const router = useRouter();
-
   const [loading, setLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const auth = useAuth();
 
   const handleLogin = async () => {
     setLoading(true);
@@ -24,11 +25,7 @@ export default function LoginForm() {
     if (response?.status === 200) {
       setLoading(false);
 
-      const data = JSON.stringify({
-        token: response?.token,
-        name: response?.user,
-      });
-      localStorage.setItem("raplens", data);
+      auth.login({ accessToken: response.token ?? "" });
       if (response?.user?.role === "ORANG_TUA") {
         router.push("/orang-tua/dashboard");
       } else {

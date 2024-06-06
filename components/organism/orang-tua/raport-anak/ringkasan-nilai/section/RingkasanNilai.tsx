@@ -13,19 +13,21 @@ import AkademikSiswa from "../charts/AkademikSiswa";
 import NonAkademikSiswa from "../charts/NonAkademikSiswa";
 import KehadiranSiswa from "../charts/KehadiranSiswa";
 import SikapDanPerilakuSiswa from "../charts/SikapDanPerilakuSiswa";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function RingkasanNilai() {
   const router = useRouter();
+  const auth = useAuth();
 
   const [semester, setSemester] = useState<string>("");
   const [dataSemester, setDataSemester] = useState<any>(null);
   const [data, setData] = useState<any>(null);
 
-  const getSemester = (value: string) => {
+  const getSemester = () => {
     axios
       .get("/api/semester", {
         headers: {
-          Authorization: `Bearer ${value}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -36,11 +38,11 @@ export default function RingkasanNilai() {
       });
   };
 
-  const getVisualisasi = async (token: string) => {
+  const getVisualisasi = async () => {
     axios
       .get(`/api/visualisasi/orang-tua?semesterId=${semester}`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -52,13 +54,8 @@ export default function RingkasanNilai() {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getSemester(data?.token);
-      getVisualisasi(data?.token);
-    }
+    getSemester();
+    getVisualisasi();
   }, []);
 
   if (!data) {

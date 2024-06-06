@@ -12,6 +12,8 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { TbReport } from "react-icons/tb";
 import useIsMobile from "@/hooks/UseIsMobiile";
 import { IoIosArrowDown } from "react-icons/io";
+import { useAuth } from "@/hooks/useAuth";
+import axios from "axios";
 
 type sidebarProps = {
   isOpen: boolean;
@@ -22,16 +24,29 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
   const router = useRouter();
+
+  const auth = useAuth();
+
   const [open, setOpen] = useState<boolean>(true);
-  const [role, setRole] = useState<string>("");
+  const [data, setData] = useState<any>(null);
+
+  const getProfile = () => {
+    axios
+      .get("/api/profile", {
+        headers: {
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
+        },
+      })
+      .then((res) => {
+        setData(res.data.data);
+      })
+      .catch(() => {
+        console.log("error");
+      });
+  };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      setRole(data.name?.role);
-    }
+    getProfile();
   }, []);
 
   return (
@@ -180,8 +195,13 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   ? "bg-[#5DADE2] bg-opacity-10 rounded-md"
                   : "text-neutral-600"
               }`}
-              onClick={() => router.push("/guru/dashboard")}
-              // onClick={() => router.push("/orang-tua/dashboard")}
+              onClick={() => {
+                if (data?.role === "GURU") {
+                  router.push("/guru/dashboard");
+                } else {
+                  router.push("/orang-tua/dashboard");
+                }
+              }}
             >
               <MdOutlineDashboard size={24} className="flex-shrink-0" />
               {isOpen && (
@@ -203,7 +223,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
             <div
               className={`flex justify-between items-center cursor-pointer`}
               onClick={() => {
-                if (role === "GURU") {
+                if (data?.role === "GURU") {
                   router.push("/guru/raport-siswa/data-raport");
                 } else {
                   router.push("/orang-tua/raport-anak");
@@ -226,7 +246,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                     }}
                     className="text-base leading-6 font-medium"
                   >
-                    {role === "GURU" ? "Raport Siswa" : "Raport Anak"}
+                    {data?.role === "GURU" ? "Raport Siswa" : "Raport Anak"}
                   </motion.h1>
                 )}
               </div>
@@ -261,7 +281,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                   },
                 }}
               >
-                {role === "GURU" ? (
+                {data?.role === "GURU" ? (
                   <>
                     <div
                       onClick={() =>

@@ -5,17 +5,19 @@ import SeniBudayaSiswa from "../charts/SeniBudayaSiswa";
 import IpsSiswa from "../charts/IpsSiswa";
 import IpaSiswa from "../charts/IpaSiswa";
 import BahasaIndonesiaSiswa from "../charts/BahasaIndonesiaSiswa";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Akademik() {
+  const auth = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getData = async (token: string) => {
+  const getData = async () => {
     setLoading(true);
     axios
       .get("/api/visualisasi/orang-tua/detail-akademik", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${auth.auth?.accessToken}`,
         },
       })
       .then((res) => {
@@ -29,12 +31,7 @@ export default function Akademik() {
   };
 
   useEffect(() => {
-    const temp =
-      typeof window !== "undefined" && localStorage.getItem("raplens");
-    if (temp) {
-      const data = JSON.parse(temp);
-      getData(data?.token);
-    }
+    getData();
   }, []);
 
   return (
