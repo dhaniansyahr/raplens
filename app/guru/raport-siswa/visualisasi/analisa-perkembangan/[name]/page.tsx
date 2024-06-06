@@ -1,10 +1,10 @@
 "use client";
 import Navbar from "@/components/molecules/navbar/Navbar";
 import Sidebar from "@/components/molecules/sidebar/Sidebar";
-import Top from "@/components/organism/orang-tua/Dashboard/section/Top";
+import AnalisaPerkembangan from "@/components/organism/guru/raport-anak/data-raport/analisa-perkembangan/AnalisaPerkembangan";
 import { useState } from "react";
 
-export default function Dashboard() {
+export default function Page({ params }: { params: { name: string } }) {
   const [sideOpen, setSideOpen] = useState<boolean>(false);
 
   return (
@@ -12,8 +12,8 @@ export default function Dashboard() {
       <Navbar isOpen={sideOpen} setOpen={setSideOpen} />
       <div className="flex flex-row">
         <Sidebar isOpen={sideOpen} onClose={setSideOpen} />
-        <div className="w-full h-full py-24 px-6 lg:p-24 lg:pt-[400px] max-h-screen overflow-y-scroll">
-          <Top />
+        <div className="w-full h-full py-24 px-6 lg:p-24 lg:pt-[150px] max-h-screen overflow-y-scroll">
+          <AnalisaPerkembangan name={params.name} />
         </div>
       </div>
     </main>

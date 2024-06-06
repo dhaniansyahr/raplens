@@ -24,6 +24,7 @@ import Akademik from "../charts/Akademik";
 import PersentaseKehadiran from "../charts/PersentaseKehadiran";
 import { DialogDetail } from "../dialog/DialogDetail";
 import { DialogEdit } from "../dialog/DialogEdit";
+import { useRouter } from "next/navigation";
 
 export type Data = {
   id: string;
@@ -33,6 +34,7 @@ export type Data = {
 };
 
 export default function TableSiswa() {
+  const router = useRouter();
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
@@ -108,7 +110,6 @@ export default function TableSiswa() {
 
   const getData = async (token: string) => {
     setLoading(true);
-    toast.loading("Loading...");
     axios
       .get("/api/siswa", {
         headers: {
@@ -118,15 +119,9 @@ export default function TableSiswa() {
       .then((res) => {
         setLoading(false);
         setData(res.data?.siswa);
-        toast.dismiss();
-        toast.success("Data Siswa berhasil diambil!");
-
-        console.log("Data Siswa: ", res.data?.siswa);
       })
       .catch(() => {
         setLoading(false);
-        toast.dismiss();
-        toast.error("Data Siswa gagal diambil!");
       });
   };
 
@@ -260,8 +255,10 @@ export default function TableSiswa() {
             <Akademik />
           </div>
         </div>
-
-        <button className="bg-[#BCF7FF] rounded-full px-6 py-3 outline-none border-none shadow max-w-[300px]">
+        <button
+          onClick={() => router.push("/guru/raport-siswa/data-raport")}
+          className="bg-[#BCF7FF] rounded-full px-6 py-3 outline-none border-none shadow max-w-[300px]"
+        >
           <span className="text-[#0B378D] font-normal text-2xl">
             Lihat Daftar Raport
           </span>

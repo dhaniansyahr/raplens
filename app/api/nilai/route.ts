@@ -628,110 +628,289 @@ const PUT = async (req: any) => {
           { status: 404 }
         );
       }
-
-      const matematika = await prisma.matematika.create({
-        data: data.matematika,
-      });
-
-      const bahasa_indonesia = await prisma.bahasaIndonesia.create({
-        data: data.bahasa_indonesia,
-      });
-
-      const ipa = await prisma.ipa.create({
-        data: data.ipa,
-      });
-
-      const ips = await prisma.ips.create({
-        data: data.ips,
-      });
-
-      const seni_budaya = await prisma.seniBudaya.create({
-        data: data.seni_budaya,
-      });
-
-      const nilaiAkademik = await prisma.akademik.create({
-        data: {
-          id: randomUUID(),
+      const nilaiAkademikId = await prisma.akademik.findMany({
+        where: {
           siswaId: findSiswa.id,
           semesterId: data.semesterid,
+        },
+      });
+
+      if (!nilaiAkademikId) {
+        return NextResponse.json(
+          { error: "Akademik not found" },
+          { status: 404 }
+        );
+      }
+
+      const matematika = await prisma.matematika.update({
+        where: {
+          id: nilaiAkademikId[0].matematikaId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.matematika.uas,
+          uts: data.matematika.uts,
+          tugas_1: data.matematika.tugas1,
+          tugas_2: data.matematika.tugas2,
+        },
+      });
+
+      const bahasa_indonesia = await prisma.bahasaIndonesia.update({
+        where: {
+          id: nilaiAkademikId[0].bahasaIndonesiaId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.bahasaIndonesia.uas,
+          uts: data.bahasaIndonesia.uts,
+          tugas_1: data.bahasaIndonesia.tugas1,
+          tugas_2: data.bahasaIndonesia.tugas2,
+        },
+      });
+
+      const ipa = await prisma.ipa.update({
+        where: {
+          id: nilaiAkademikId[0].ipaId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.ipa.uas,
+          uts: data.ipa.uts,
+          tugas_1: data.ipa.tugas1,
+          tugas_2: data.ipa.tugas2,
+        },
+      });
+
+      const ips = await prisma.ips.update({
+        where: {
+          id: nilaiAkademikId[0].ipsId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.ips.uas,
+          uts: data.ips.uts,
+          tugas_1: data.ips.tugas1,
+          tugas_2: data.ips.tugas2,
+        },
+      });
+
+      const seni_budaya = await prisma.seniBudaya.update({
+        where: {
+          id: nilaiAkademikId[0].seniBudayaId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.kesenian.uas,
+          uts: data.kesenian.uts,
+          tugas_1: data.kesenian.tugas1,
+          tugas_2: data.kesenian.tugas2,
+        },
+      });
+
+      const updateAkademik = await prisma.akademik.update({
+        where: {
+          id: nilaiAkademikId[0].id,
+        },
+        data: {
           matematikaId: matematika.id,
           bahasaIndonesiaId: bahasa_indonesia.id,
           ipaId: ipa.id,
           ipsId: ips.id,
           seniBudayaId: seni_budaya.id,
-          kelasId: data.kelasid,
         },
       });
 
-      const olahraga = await prisma.olahraga.create({
-        data: data.olahraga,
-      });
-
-      const olimpiade = await prisma.olimpiade.create({
-        data: data.olimpiade,
-      });
-
-      const seni = await prisma.seni.create({
-        data: data.seni,
-      });
-
-      const keterampilan = await prisma.keterampilan.create({
-        data: data.keterampilan,
-      });
-
-      const nilaiNonAkademik = await prisma.nonAkademik.create({
-        data: {
-          id: randomUUID(),
+      const nilaiNonAkademikId = await prisma.nonAkademik.findMany({
+        where: {
           siswaId: findSiswa.id,
           semesterId: data.semesterid,
+        },
+      });
+
+      if (!nilaiNonAkademikId) {
+        return NextResponse.json(
+          { error: "Non Akademik not found" },
+          { status: 404 }
+        );
+      }
+
+      const olahraga = await prisma.olahraga.update({
+        where: {
+          id: nilaiNonAkademikId[0].olahragaId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.olahraga.uas,
+          uts: data.olahraga.uts,
+          tugas_1: data.olahraga.tugas1,
+          tugas_2: data.olahraga.tugas2,
+        },
+      });
+
+      const olimpiade = await prisma.olimpiade.update({
+        where: {
+          id: nilaiNonAkademikId[0].olimpiadeId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.olimpiade.uas,
+          uts: data.olimpiade.uts,
+          tugas_1: data.olimpiade.tugas1,
+          tugas_2: data.olimpiade.tugas2,
+        },
+      });
+
+      const seni = await prisma.seni.update({
+        where: {
+          id: nilaiNonAkademikId[0].seniId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.seni.uas,
+          uts: data.seni.uts,
+          tugas_1: data.seni.tugas1,
+          tugas_2: data.seni.tugas2,
+        },
+      });
+
+      const keterampilan = await prisma.keterampilan.update({
+        where: {
+          id: nilaiNonAkademikId[0].keterampilanId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          uas: data.keterampilan.uas,
+          uts: data.keterampilan.uts,
+          tugas_1: data.keterampilan.tugas1,
+          tugas_2: data.keterampilan.tugas2,
+        },
+      });
+
+      const updateNonAkademik = await prisma.nonAkademik.update({
+        where: {
+          id: nilaiNonAkademikId[0].id,
+        },
+        data: {
           olahragaId: olahraga.id,
           olimpiadeId: olimpiade.id,
           seniId: seni.id,
           keterampilanId: keterampilan.id,
-          kelasId: data.kelasid,
         },
       });
 
-      const kedisiplinan = await prisma.kedisiplinan.create({
-        data: data.kedisiplinan,
-      });
-
-      const tanggung_jawab = await prisma.tanggungJawab.create({
-        data: data.tanggung_jawab,
-      });
-
-      const adaptasi = await prisma.adaptasi.create({
-        data: data.adaptasi,
-      });
-
-      const kerja_sama = await prisma.kerjaSama.create({
-        data: data.kerja_sama,
-      });
-
-      const etikaBelajar = await prisma.etikaBelajar.create({
-        data: data.etika_belajar,
-      });
-
-      const nilaiSikap = await prisma.sikapDanPerilaku.create({
-        data: {
-          id: randomUUID(),
+      const nilaiSikapId = await prisma.sikapDanPerilaku.findMany({
+        where: {
           siswaId: findSiswa.id,
           semesterId: data.semesterid,
+        },
+      });
+
+      if (!nilaiSikapId) {
+        return NextResponse.json(
+          { error: "Sikap dan Perilaku not found" },
+          { status: 404 }
+        );
+      }
+
+      const kedisiplinan = await prisma.kedisiplinan.update({
+        where: {
+          id: nilaiSikapId[0].kedisiplinanId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          kehadiran: data.kedisiplinan.kehadiran,
+          keterlambatan: data.kedisiplinan.keterlambatan,
+          kepatuhan: data.kedisiplinan.kepatuhan,
+          kerapihan: data.kedisiplinan.kerapihan,
+          catatan: "Kedisiplinan siswa sangat baik",
+        },
+      });
+
+      const tanggung_jawab = await prisma.tanggungJawab.update({
+        where: {
+          id: nilaiSikapId[0].tanggungJawabId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          tugas: data.tanggungJawab.tugas,
+          kebersihan: data.tanggungJawab.kebersihan,
+          kepemimpinan: data.tanggungJawab.kepemimpinan,
+          catatan: "Tanggung jawab siswa sangat baik",
+        },
+      });
+
+      const adaptasi = await prisma.adaptasi.update({
+        where: {
+          id: nilaiSikapId[0].adaptasiId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          kehadiran: data.adaptasi.kehadiran,
+          keterlambatan: data.adaptasi.keterlambatan,
+          kepatuhan: data.adaptasi.kepatuhan,
+          kerapihan: data.adaptasi.kerapihan,
+          catatan: "Adaptasi siswa sangat baik",
+        },
+      });
+
+      const kerja_sama = await prisma.kerjaSama.update({
+        where: {
+          id: nilaiSikapId[0].kerjaSamaId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          kerjaTim: data.kerjaSama.kerjaTim,
+          kerjaSama: data.kerjaSama.kerjaSama,
+          komunikasi: data.kerjaSama.komunikasi,
+          catatan: "Kerja Sama siswa sangat baik",
+        },
+      });
+
+      const etikaBelajar = await prisma.etikaBelajar.update({
+        where: {
+          id: nilaiSikapId[0].etikaBelajarId ?? "",
+        },
+        data: {
+          semesterId: data.semesterid,
+          kerajinan: data.etikaBelajar.kerajinan,
+          integrasi: data.etikaBelajar.integrasi,
+          konsentrasi: data.etikaBelajar.konsentrasi,
+          catatan: "Etika belajar siswa sangat baik",
+        },
+      });
+
+      const updateSikap = await prisma.sikapDanPerilaku.update({
+        where: {
+          id: nilaiSikapId[0].id,
+        },
+        data: {
           kedisiplinanId: kedisiplinan.id,
           tanggungJawabId: tanggung_jawab.id,
           adaptasiId: adaptasi.id,
           kerjaSamaId: kerja_sama.id,
           etikaBelajarId: etikaBelajar.id,
-          kelasId: data.kelasid,
         },
       });
 
-      const nilaiKehadiran = await prisma.kehadiran.create({
-        data: {
-          id: randomUUID(),
+      const nilaiKehadiranId = await prisma.kehadiran.findMany({
+        where: {
           siswaId: findSiswa.id,
           semesterId: data.semesterid,
-          kelasId: data.kelasid,
+        },
+      });
+
+      if (!nilaiKehadiranId) {
+        return NextResponse.json(
+          { error: "Kehadiran not found" },
+          { status: 404 }
+        );
+      }
+
+      const updateKehadiran = await prisma.kehadiran.update({
+        where: {
+          id: nilaiKehadiranId[0].id,
+        },
+        data: {
           hadir: data.hadir,
           sakit: data.sakit,
           izin: data.izin,
@@ -740,13 +919,13 @@ const PUT = async (req: any) => {
       });
 
       if (
-        !nilaiAkademik ||
-        !nilaiNonAkademik ||
-        !nilaiSikap ||
-        !nilaiKehadiran
+        !updateAkademik ||
+        !updateNonAkademik ||
+        !updateSikap ||
+        !updateKehadiran
       ) {
         return NextResponse.json(
-          { error: "Failed to create report" },
+          { error: "Failed to update report" },
           { status: 500 }
         );
       }
@@ -758,22 +937,22 @@ const PUT = async (req: any) => {
         data: {
           Akademik: {
             connect: {
-              id: nilaiAkademik.id,
+              id: nilaiAkademikId[0].id,
             },
           },
           NonAkademik: {
             connect: {
-              id: nilaiNonAkademik.id,
+              id: nilaiNonAkademikId[0].id,
             },
           },
           SikapDanPerilaku: {
             connect: {
-              id: nilaiSikap.id,
+              id: nilaiSikapId[0].id,
             },
           },
           Kehadiran: {
             connect: {
-              id: nilaiKehadiran.id,
+              id: nilaiKehadiranId[0].id,
             },
           },
           Kelas: {
