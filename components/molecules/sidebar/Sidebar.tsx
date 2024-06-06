@@ -226,7 +226,7 @@ export default function Sidebar({ isOpen, onClose }: sidebarProps) {
                 if (data?.role === "GURU") {
                   router.push("/guru/raport-siswa/data-raport");
                 } else {
-                  router.push("/orang-tua/raport-anak");
+                  router.push("/orang-tua/raport-anak/ringkasan-nilai");
                 }
                 setOpen(!open);
               }}
