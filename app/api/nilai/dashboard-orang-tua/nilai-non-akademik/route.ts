@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
   try {
     const token = req.headers.get("Authorization");
