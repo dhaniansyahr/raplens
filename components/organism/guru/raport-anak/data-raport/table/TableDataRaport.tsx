@@ -37,13 +37,6 @@ export default function TableDataRaport() {
   const tanggal = new Date().toLocaleDateString();
 
   const columns: ColumnDef<Data>[] = [
-    // {
-    //   accessorKey: "id",
-    //   header: "ID",
-    //   cell: ({ row }: any) => (
-    //     <div className="capitalize">{row.getValue("id")}</div>
-    //   ),
-    // },
     {
       accessorKey: "nama",
       header: "NAMA",
@@ -58,13 +51,6 @@ export default function TableDataRaport() {
         <div className="lowercase">{row.getValue("nisn")}</div>
       ),
     },
-    // {
-    //   accessorKey: "nama_ayah",
-    //   header: "NAMA ORANG TUA",
-    //   cell: ({ row }: any) => (
-    //     <div className="capitalize">{row.getValue("nama_ayah")}</div>
-    //   ),
-    // },
     {
       accessorKey: "id",
       id: "actions",
@@ -115,8 +101,6 @@ export default function TableDataRaport() {
         setData(res.data?.siswa);
         toast.dismiss();
         toast.success("Data Siswa berhasil diambil!");
-
-        console.log("Data Siswa: ", res.data?.siswa);
       })
       .catch(() => {
         setLoading(false);

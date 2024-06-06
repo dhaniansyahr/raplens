@@ -7,8 +7,6 @@ import { useState } from "react";
 export default function Page({ params }: { params: { id: string } }) {
   const [sideOpen, setSideOpen] = useState<boolean>(false);
 
-  console.log("Params: ", params);
-
   return (
     <main className="w-full h-full flex flex-col bg-dashboard">
       <Navbar isOpen={sideOpen} setOpen={setSideOpen} />
