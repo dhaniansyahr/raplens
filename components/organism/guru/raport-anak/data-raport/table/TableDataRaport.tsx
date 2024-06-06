@@ -82,7 +82,14 @@ export default function TableDataRaport() {
             >
               <span className="text-white font-medium text-base">Detail</span>
             </button>
-            <button className="bg-[#C5C80D] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">
+            <button
+              onClick={() =>
+                router.push(
+                  `/guru/raport-siswa/data-raport/edit-nilai/${row.original.id}`
+                )
+              }
+              className="bg-[#C5C80D] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80"
+            >
               <span className="text-white font-medium text-base">Edit</span>
             </button>
             <button className="bg-[#FD2943] px-4 py-2 rounded-full border-none flex items-center justify-center hover:bg-opacity-80">

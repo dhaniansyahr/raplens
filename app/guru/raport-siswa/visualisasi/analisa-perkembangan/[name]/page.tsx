@@ -4,7 +4,7 @@ import Sidebar from "@/components/molecules/sidebar/Sidebar";
 import AnalisaPerkembangan from "@/components/organism/guru/raport-anak/data-raport/analisa-perkembangan/AnalisaPerkembangan";
 import { useState } from "react";
 
-export default function Page() {
+export default function Page({ params }: { params: { name: string } }) {
   const [sideOpen, setSideOpen] = useState<boolean>(false);
 
   return (
@@ -13,7 +13,7 @@ export default function Page() {
       <div className="flex flex-row">
         <Sidebar isOpen={sideOpen} onClose={setSideOpen} />
         <div className="w-full h-full py-24 px-6 lg:p-24 lg:pt-[150px] max-h-screen overflow-y-scroll">
-          <AnalisaPerkembangan />
+          <AnalisaPerkembangan name={params.name} />
         </div>
       </div>
     </main>
