@@ -95,7 +95,6 @@ export default function PersentaseKehadiran() {
       getData(data?.token);
     }
   }, []);
-
   return (
     <ResponsiveContainer width="100%" height={500}>
       <PieChart width={800} height={800}>

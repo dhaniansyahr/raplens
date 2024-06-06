@@ -628,7 +628,6 @@ const PUT = async (req: any) => {
           { status: 404 }
         );
       }
-
       const nilaiAkademikId = await prisma.akademik.findMany({
         where: {
           siswaId: findSiswa.id,

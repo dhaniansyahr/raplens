@@ -255,7 +255,6 @@ export default function TableSiswa() {
             <Akademik />
           </div>
         </div>
-
         <button
           onClick={() => router.push("/guru/raport-siswa/data-raport")}
           className="bg-[#BCF7FF] rounded-full px-6 py-3 outline-none border-none shadow max-w-[300px]"
