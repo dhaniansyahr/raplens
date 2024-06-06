@@ -5,6 +5,7 @@ import { v4 as uuid } from "uuid";
 
 const prisma = new PrismaClient();
 
+export const dynamic = "force-dynamic";
 const GET = async (req: any) => {
   try {
     const token = req.headers.get("Authorization");

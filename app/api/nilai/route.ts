@@ -6,6 +6,7 @@ import { v4 as randomUUID } from "uuid";
 const prisma = new PrismaClient();
 
 // Post Method
+export const dynamic = "force-dynamic";
 const POST = async (req: any) => {
   try {
     const token = req.headers.get("Authorization");

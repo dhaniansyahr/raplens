@@ -2,7 +2,6 @@ import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
-
 export default async function login(req: any, res: any) {
   const { email, password } = req.body;
 
