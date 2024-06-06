@@ -12,7 +12,7 @@ export default function Dashboard() {
       <Navbar isOpen={sideOpen} setOpen={setSideOpen} />
       <div className="flex flex-row">
         <Sidebar isOpen={sideOpen} onClose={setSideOpen} />
-        <div className="w-full h-full py-24 px-6 lg:p-24 lg:pt-[400px] flex items-center justify-center max-h-screen overflow-y-scroll">
+        <div className="w-full h-full py-24 px-6 lg:p-24 lg:pt-[400px] max-h-screen overflow-y-scroll">
           <Top />
         </div>
       </div>
